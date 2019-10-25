@@ -1,0 +1,22 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row justify-content-md-center text-center">
+    <div>
+      <h1>Collaviz</h1>
+		  <h3>Déposez le fichier à étudier : </h3>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input  type="file" name="fichier">
+        <button type="submit">Déposer</button>
+      </form>
+	  </div>
+	</div>
+</div>
+
+{% endblock %}
