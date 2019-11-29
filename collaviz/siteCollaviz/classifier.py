@@ -3,7 +3,7 @@ import pandas as pd
 import csv
 import os
 from datetime import datetime
-
+folder = "./media/tmp/"
 def is_create(line):
     return 'CREATE TABLE' in line or False
 
@@ -29,7 +29,7 @@ def get_table_name_insert(line):
 
 def create_csv_file(filename):
     filename += ".csv"
-    open("./media/" + filename, 'w')
+    open(folder + filename, 'w')
 
 def set_values_insert(line, file):
     #s = ","
@@ -38,7 +38,7 @@ def set_values_insert(line, file):
     writer.writerow(p.findall(line)[1:])
 
 def sql_to_csv(sqlfile):
-    reader = open("./media/" + sqlfile, 'r', encoding='utf-8')
+    reader = open(folder + sqlfile, 'r', encoding='utf-8')
     contenu = reader.read()
     lines = contenu.split("\n")
     nb_table = 0
@@ -53,7 +53,7 @@ def sql_to_csv(sqlfile):
         if is_insert(line):
             filename = get_table_name_insert(line)
             insert = True
-            file = open("./media/" + filename + ".csv", 'a')
+            file = open(folder + filename + ".csv", 'a')
             set_values_insert(line, file)
         if is_finish(line):
             insert = False
