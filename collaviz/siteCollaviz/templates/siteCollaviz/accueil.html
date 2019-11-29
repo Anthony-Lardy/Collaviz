@@ -4,12 +4,12 @@
 {% load static %}
 
 {% block content %}
-<h2>{{test}}</h2>
-<div id="container"></div>
-<button type="button" name="button" onclick="afficherChart({{test}})"></button>
+{% if request.method == "POST" %}
+<button type="button" name="button" onclick="afficherChart({{donnees}})"></button>
+{%endif %}
 <div class="container">
   <div class="row justify-content-md-center text-center">
-    <div>
+    <div id="insertionFichier">
       <h1>Collaviz</h1>
 		  <h3>Déposez le fichier à étudier : </h3>
       <form method="post" enctype="multipart/form-data">
@@ -17,68 +17,64 @@
         <input  type="file" name="fichier">
         <button type="submit">Déposer</button>
       </form>
-	  </div>
-	</div>
   <div id="cont"></div>
+  </div>
+   </div>
+  <div id="previsualisation">
+    <div id="employee_table"> </div>
 
+  </div>
 </div>
+
 
 <script type="text/javascript">
 
-function afficherChart(data){
-  alert(data)
-var chart = Highcharts.chart('cont', {
-      title: {
-          text: 'Solar Employment Growth by Sector, 2010-2016'
-      },
-
-      subtitle: {
-          text: 'Source: thesolarfoundation.com'
-      },
-
-      yAxis: {
-          title: {
-              text: 'Number of Employees'
-          }
-      },
-      legend: {
-          layout: 'vertical',
-          align: 'right',
-          verticalAlign: 'middle'
-      },
-
-      plotOptions: {
-          series: {
-              label: {
-                  connectorAllowed: false
-              },
-              pointStart: 2010
-          }
-      },
-
-      series: [{
-          name: 'donnée',
-          data: data
-      }],
-
-      responsive: {
-          rules: [{
-              condition: {
-                  maxWidth: 500
-              },
-              chartOptions: {
-                  legend: {
-                      layout: 'horizontal',
-                      align: 'center',
-                      verticalAlign: 'bottom'
-                  }
-              }
-          }]
-      }
-
-  });
-
-
+function afficherChart(donnees){
+  var chart =Highcharts.chart('cont', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Nombre de connexions de chaque utilisateur'
+    },
+    xAxis: {
+        type: 'category',
+        labels: {
+            rotation: -45,
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Nombre de connexions'
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    tooltip: {
+        pointFormat: 'Nombre de connexions: <b>{point.y:.1f}</b>'
+    },
+    series: [{
+        name: 'Connexions',
+        data: donnees,
+        dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#FFFFFF',
+            align: 'right',
+            y: 10,
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    }]
+});
 
 
   $("#cont").draggable();
@@ -86,9 +82,42 @@ var chart = Highcharts.chart('cont', {
   $("#cont").resize(function() {
   chart.reflow()
 });
-
-
 }
+$(document).ready( function () {
+
+    $.ajax({
+   url:"../media/tmp/activite.csv",
+   dataType:"text",
+   success:function(data)
+   {
+    var employee_data = data.split(/\r?\n|\r/);
+    var table_data = '<table id="test" class="table table-bordered table-striped">';
+      alert(employee_data)
+    for(var count = 0; count<employee_data.length; count++)
+    {
+     var cell_data = employee_data[count].split(",");
+     table_data += '<tr>';
+     for(var cell_count=0; cell_count<cell_data.length; cell_count++)
+     {
+      if(count === 0)
+      {
+       table_data += '<th>'+cell_data[cell_count]+'</th>';
+      }
+      else
+      {
+       table_data += '<td>'+cell_data[cell_count]+'</td>';
+      }
+     }
+     table_data += '</tr>';
+    }
+    table_data += '</table>';
+    $('#employee_table').html(table_data);
+   }
+
+  });
+ });
+
+
 
 </script>
 

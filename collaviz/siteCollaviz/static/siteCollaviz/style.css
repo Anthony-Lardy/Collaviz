@@ -12,3 +12,10 @@ z-index: -1;
 .text-center{
   text-align: center;
 }
+
+#insertionFichier{
+ height: 100vh;
+}
+#previsualisation{
+  height: 100vh;
+}

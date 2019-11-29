@@ -1,19 +1,18 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from siteCollaviz import script
+from siteCollaviz import classifier
 
 def collaviz(request):
-    test ={
-        'test': script.func1(),
-    }
+
     if request.method == 'POST' and request.FILES['fichier']:
         myfile = request.FILES['fichier']
         fs = FileSystemStorage()
         filename = fs.save(myfile.name, myfile)
-        test ={
-            'test': filename
-        }
         uploaded_file_url = fs.url(filename)
-        return render(request, 'siteCollaviz/accueil.html', test)
-    return render(request, 'siteCollaviz/accueil.html', test)
+        classifier.sql_to_csv(filename)
+        donnees ={
+            'donnees': classifier.nbActionsall("./media/transition.csv", "'Connexion'")
+        }
+        return render(request, 'siteCollaviz/accueil.html', donnees)
+    return render(request, 'siteCollaviz/accueil.html')
