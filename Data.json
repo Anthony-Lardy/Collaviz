@@ -1,0 +1,35 @@
+{
+  "tickets":[
+    {
+      "Name": "Liam",
+      "Location": {
+        "City": "Los Angeles",
+        "State": "CA"
+      },
+      "hobbies": [
+        "Piano",
+        "Sports"
+      ],
+      "year" : 1985,
+      "teamId" : "ATL",
+      "playerId" : "barkele01",
+      "salary" : 870000
+    },
+    {
+      "Name": "John",
+      "Location": {
+        "City": "Los Angeles",
+        "State": "CA"
+      },
+      "hobbies": [
+        "Music",
+        "Running"
+      ],
+      "year" : 1985,
+      "teamId" : "ATL",
+      "playerId" : "bedrost01",
+      "salary" : 550000
+    }
+  ],
+  "count": 2
+}
