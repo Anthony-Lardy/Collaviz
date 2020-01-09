@@ -1,231 +1,254 @@
-{% extends 'base.html' %}
-{% load static %}
+  {% extends 'base.html' %}
+  {% load static %}
 
-{% block content %}
-{% if request.method == "POST" %}
-<button type="button" name="button" onclick="afficherChart({{donnees}})"></button>
-{%endif %}
-<div class="container">
-  <div class="row justify-content-md-center text-center">
-    <div id="insertionFichier">
-      <h1>Collaviz</h1>
-      <h3>Déposez le fichier à étudier : </h3>
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="fichier">
-        <button type="submit">Déposer</button>
-      </form>
-      <div id="cont"></div>
+  {% block content %}
+  {% if request.method == "POST" %}
+  <button type="button" name="button" onclick="afficherChart({{donnees}})"></button>
+  {%endif %}
+  <div class="container">
+    <div class="row justify-content-md-center text-center">
+      <div id="insertionFichier">
+        <h1>Collaviz</h1>
+        <h3>Déposez le fichier à étudier : </h3>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="file" name="fichier">
+          <button type="submit">Déposer</button>
+        </form>
+        <div id="cont"></div>
+      </div>
     </div>
+    <!--previsualisation------------>
   </div>
-  <div id="previsualisation">
-    {% if request.method == "POST" %}
-    <select class="browser-default custom-select" id="selectFile" onchange="afficherTableau()">
-      <option selected disabled value=""></option>
-      {% for o in file %}
-      <option value="{{o}}">{{o}}</option>
-      {% endfor %}
-    </select>
-    {%endif %}
-    <div id="csv-display"> </div>
-  </div>
-  <div id="mapping" class="row">
-    <div id="user" class="col-sm">
-      <h4>Utilisateur : </h4>
+    <div class="container">
+      <div class="row justify-content-md-center">
+        <h2>Prévisualisation des données</h2>
+      </div>
+    </div>
+    <div id="previsualisation">
       {% if request.method == "POST" %}
-      <select class="browser-default custom-select" id="mappingUser" onchange="getColonnes('mappingUser')">
+      <select class="browser-default custom-select" id="selectFile" onchange="afficherTableau()">
         <option selected disabled value=""></option>
         {% for o in file %}
         <option value="{{o}}">{{o}}</option>
         {% endfor %}
       </select>
       {%endif %}
-      <select id="mappingUserCol" class="browser-default custom-select"> </select>
+      <div id="csv-display"> </div>
     </div>
-    <div id="date" class="col-sm">
-      <h4>Date : </h4>
-      {% if request.method == "POST" %}
-      <select class="browser-default custom-select" id="mappingDate" onchange="getColonnes('mappingDate')">
-        <option selected disabled value=""></option>
-        {% for o in file %}
-        <option value="{{o}}">{{o}}</option>
-        {% endfor %}
-      </select>
-      {%endif %}
-      <select id="mappingDateCol" class="browser-default custom-select"> </select>
+    <!--Mapping------------>
+    <div class="container">
+      <div class="row justify-content-md-center">
+        <h2>Mapping</h2>
+      </div>
     </div>
-    <div id="heure" class="col-sm">
-      <h4>Heure : </h4>
-      {% if request.method == "POST" %}
-      <select class="browser-default custom-select" id="mappingHeure" onchange="getColonnes('mappingHeure')">
-        <option selected disabled value=""></option>
-        {% for o in file %}
-        <option value="{{o}}">{{o}}</option>
-        {% endfor %}
-      </select>
-      {%endif %}
-      <select id="mappingHeureCol" class="browser-default custom-select"> </select>
+    <div id="mapping" class="row">
+      <div class="col-12">
+        {% if request.method == "POST" %}
+        <select class="browser-default custom-select" id="mappingFichier" onchange="getColonnes()">
+          <option selected disabled value=""></option>
+          {% for o in file %}
+          <option value="{{o}}">{{o}}</option>
+          {% endfor %}
+        </select>
+        {%endif %}
+      </div>
+      <div id="user" class="col-4">
+        <h4>Utilisateur : </h4>
+        <select id="utilisateurCol" class="browser-default custom-select"> </select>
+      </div>
+      <div id="date" class="col-4">
+        <h4>Date : </h4>
+        <select id="dateCol" class="browser-default custom-select"> </select>
+      </div>
+      <div id="heure" class="col-4">
+        <h4>Heure : </h4>
+        <select id="heureCol" class="browser-default custom-select"> </select>
+      </div><br><br><br><br><br>
+      <div id="action" class="col-4">
+        <h4>Action : </h4>
+        <select id="actionCol" class="browser-default custom-select"></select>
+      </div><br><br><br><br>
+      <div class="row col-12">
+        <div class="col-6">
+          <label>"Répondre à un message : "</label>
+          <input class="w3-input" type="text">
+        </div>
+        <div class="col-6">
+          <label>"Créer un nouveau message :"</label>
+          <input class="w3-input" type="text">
+        </div>
+      </div>
+      <div id="attribut" class="col-4">
+        <h4>Attribut : </h4>
+        <select id="attributCol" class="browser-default custom-select"></select>
+      </div><br><br><br><br>
+      <div class="row col-12">
+        <div class="col-4">
+          <label>"idForum : "</label>
+          <input class="w3-input" type="text">
+        </div>
+        <div class="col-4">
+          <label>"idMessage :"</label>
+          <input class="w3-input" type="text">
+        </div>
+        <div class="col-4">
+          <label>"idParent :"</label>
+          <input class="w3-input" type="text">
+        </div>
+      </div>
     </div>
-    <div id="titre" class="col-sm">
-      <h4>Titre : </h4>
-      {% if request.method == "POST" %}
-      <select class="browser-default custom-select" id="mappingTitre" onchange="getColonnes('mappingTitre')">
-        <option selected disabled value=""></option>
-        {% for o in file %}
-        <option value="{{o}}">{{o}}</option>
-        {% endfor %}
-      </select>
-      {%endif %}
-      <select id="mappingTitreCol" class="browser-default custom-select"> </select>
-    </div>
-    <div id="attribut" class="col-sm">
-      <h4>Attribut : </h4>
-      {% if request.method == "POST" %}
-      <select class="browser-default custom-select" id="mappingAttribut" onchange="getColonnes('mappingAttribut')">
-        <option selected disabled value=""></option>
-        {% for o in file %}
-        <option value="{{o}}">{{o}}</option>
-        {% endfor %}
-      </select>
-      {%endif %}
-      <select id="mappingAttributCol" class="browser-default custom-select"> </select>
-    </div>
-  </div>
-</div>
+        <br><br><br><br><br>
+    <div class="row justify-content-md-center"><div class="col-11">
+      <div id="toolbar" class="icon-bar">
+          <a href=""><i class="fas fa-chart-pie"></i></a>
+          <a href=""><i class="fas fa-chart-area"></i></a>
+          <a href=""><i class="fas fa-chart-bar"></i></a>
+        </div>
+        </div></div>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 
-<script type="text/javascript">
-  function afficherChart(donnees) {
-    var chart = Highcharts.chart('cont', {
-      chart: {
-        type: 'column'
-      },
-      title: {
-        text: 'Nombre de connexions de chaque utilisateur'
-      },
-      xAxis: {
-        type: 'category',
-        labels: {
-          rotation: -45,
-          style: {
-            fontSize: '13px',
-            fontFamily: 'Verdana, sans-serif'
-          }
-        }
-      },
-      yAxis: {
-        min: 0,
+
+  <script type="text/javascript">
+
+    function afficherChart(donnees) {
+      var chart = Highcharts.chart('cont', {
+        chart: {
+          type: 'column'
+        },
         title: {
-          text: 'Nombre de connexions'
+          text: 'Nombre de connexions de chaque utilisateur'
+        },
+        xAxis: {
+          type: 'category',
+          labels: {
+            rotation: -45,
+            style: {
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif'
+            }
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: 'Nombre de connexions'
+          }
+        },
+        legend: {
+          enabled: false
+        },
+        tooltip: {
+          pointFormat: 'Nombre de connexions: <b>{point.y:.1f}</b>'
+        },
+        series: [{
+          name: 'Connexions',
+          data: donnees,
+          dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#FFFFFF',
+            align: 'right',
+            y: 10,
+            style: {
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif'
+            }
+          }
+        }]
+      });
+
+
+      $("#cont").draggable();
+      $("#cont").resizable();
+      $("#cont").resize(function() {
+        chart.reflow()
+      });
+    }
+
+
+    function afficherTableau() {
+      $.ajax({
+
+        url: "../media/tmp/" + $("#selectFile").val(),
+        dataType: "text",
+        success: function(data) {
+          data = $.csv.toArrays(data);
+          generateHtmlTable(data);
         }
-      },
-      legend: {
-        enabled: false
-      },
-      tooltip: {
-        pointFormat: 'Nombre de connexions: <b>{point.y:.1f}</b>'
-      },
-      series: [{
-        name: 'Connexions',
-        data: donnees,
-        dataLabels: {
-          enabled: true,
-          rotation: -90,
-          color: '#FFFFFF',
-          align: 'right',
-          y: 10,
-          style: {
-            fontSize: '13px',
-            fontFamily: 'Verdana, sans-serif'
+
+      });
+
+    }
+
+    function getColonnes() {
+      //utilisateur, date, heure, titre, attribut
+      $.ajax({
+
+        url: "../media/tmp/" + $("#mappingFichier").val(),
+        dataType: "text",
+        success: function(data) {
+          selectNom = ["utilisateur", "date", "heure", "action", "attribut"];
+          var titre = data.trim().split('\n')[0].split(',');
+          for (var i = 0; i < selectNom.length; i++) {
+            $('#' + selectNom[i] + 'Col').html("");
+            $('#' + selectNom[i] + 'Col').append($('<option selected>', {
+              value: "",
+              text: ""
+            }));
+            for (var j = 0; j < titre.length; j++) {
+              $('#' + selectNom[i] + 'Col').append($('<option>', {
+                value: j,
+                text: titre[j]
+              }));
+            }
+
           }
         }
-      }]
-    });
 
-
-    $("#cont").draggable();
-    $("#cont").resizable();
-    $("#cont").resize(function() {
-      chart.reflow()
-    });
-  }
-
-
-  function afficherTableau() {
-    $.ajax({
-
-      url: "../media/tmp/" + $("#selectFile").val(),
-      dataType: "text",
-      success: function(data) {
-        data = $.csv.toArrays(data);
-        generateHtmlTable(data);
-      }
-
-    });
-
-  }
-
-  function getColonnes(select) {
-    //utilisateur, date, heure, titre, attribut
-    $.ajax({
-
-      url: "../media/tmp/" + $("#" + select).val(),
-      dataType: "text",
-      success: function(data) {
-        var titre = data.trim().split('\n')[0].split(',');
-        $('#'+select+'Col').html("");
-        for (var i = 0; i < titre.length; i++) {
-          $('#'+select+'Col').append($('<option>', {
-            value: i,
-            text: titre[i]
-          }));
-        }
-
-      }
-
-
-    });
-
-  }
-
-  function generateHtmlTable(data) {
-
-    var html = '<table id="table" class="table table-condensed table-hover table-striped">';
-
-    if (typeof(data[0]) === 'undefined') {
-      return null;
-    } else {
-      $.each(data, function(index, row) {
-        //bind header
-        if (index == 0) {
-          html += '<thead>';
-          html += '<tr>';
-          $.each(row, function(index, colData) {
-            html += '<th>';
-            html += colData;
-            html += '</th>';
-          });
-          html += '</tr>';
-          html += '</thead>';
-          html += '<tbody>';
-        } else {
-          html += '<tr>';
-          $.each(row, function(index, colData) {
-            html += '<td>';
-            html += colData;
-            html += '</td>';
-          });
-          html += '</tr>';
-        }
       });
-      html += '</tbody>';
-      html += '</table>';
-      $('#csv-display').html(html);
+
     }
-    $('#table').DataTable();
 
-  }
-</script>
+    function generateHtmlTable(data) {
+
+      var html = '<table id="table" class="table table-condensed table-hover table-striped">';
+
+      if (typeof(data[0]) === 'undefined') {
+        return null;
+      } else {
+        $.each(data, function(index, row) {
+          //bind header
+          if (index == 0) {
+            html += '<thead>';
+            html += '<tr>';
+            $.each(row, function(index, colData) {
+              html += '<th>';
+              html += colData;
+              html += '</th>';
+            });
+            html += '</tr>';
+            html += '</thead>';
+            html += '<tbody>';
+          } else {
+            html += '<tr>';
+            $.each(row, function(index, colData) {
+              html += '<td>';
+              html += colData;
+              html += '</td>';
+            });
+            html += '</tr>';
+          }
+        });
+        html += '</tbody>';
+        html += '</table>';
+        $('#csv-display').html(html);
+      }
+      $('#table').DataTable();
+
+    }
+  </script>
 
 
-{% endblock %}
+  {% endblock %}
