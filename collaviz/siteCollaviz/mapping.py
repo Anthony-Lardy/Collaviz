@@ -18,4 +18,5 @@ def mapping(fichier, utilisateur, date, heure, titre, attribut, repondre, poster
     new_data["Attribut"] = new_data["Attribut"].replace(regex=[forum], value='IDFORUMTEST=')
     new_data["Attribut"] = new_data["Attribut"].replace(regex=[message], value='IDMSGTEST=')
     new_data["Attribut"] = new_data["Attribut"].replace(regex=[parent], value='IDPARENTTEST=')
-    return new_data
+    fichier = fichier.replace('.csv','')
+    new_data.to_csv(fichier + "Mapping" + ".csv", encoding='utf-8')
