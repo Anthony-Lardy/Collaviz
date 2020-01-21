@@ -1,16 +1,17 @@
-# siteCollaviz/forms.py
-
 from django import forms
-from siteCollaviz.models import UserProfileInfo
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
-    class Meta():
-        model = User
-        fields = ('username','password','email')
+class SignUpForm(UserCreationForm):
+    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
 
-class UserProfileInfoForm(forms.ModelForm):
-     class Meta():
-         model = UserProfileInfo
-         fields = ('portfolio_site','profile_pic')
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
+
+        def save(self, commit=True):
+            user = super(SignUpForm, self).save(commit=False)
+            user.email = self.cleaned_data["email"]
+            if commit:
+                user.save()
+                return user
