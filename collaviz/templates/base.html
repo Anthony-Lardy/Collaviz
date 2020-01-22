@@ -42,12 +42,19 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Indicateurs personnalisés</a>
         </li>
+        {% if user.is_authenticated %}
+        Welcome {{ user.username }}
+        <li class="nav-item">
+          <a href="" class="nav-link" onclick="logout()">Logout</a>
+        </li>
+        {% else %}
         <li class="nav-item">
           <a href="" class="nav-link" data-toggle="modal" data-target="#modalLoginForm">Login</a>
         </li>
         <li class="nav-item">
           <a href="" class="nav-link" data-toggle="modal" data-target="#modalRegisterForm">Register</a>
         </li>
+        {% endif %}
       </ul>
     </div>
   </nav>
@@ -120,7 +127,7 @@ aria-hidden="true">
           <input type="password" id="orangeForm-pass1" class="form-control validate" name = "password1">
           <label data-error="wrong" data-success="right" for="orangeForm-pass1">Your password</label>
         </div>
-        
+
         <div class="md-form mb-4">
           <i class="fas fa-lock prefix grey-text"></i>
           <input type="password" id="orangeForm-pass2" class="form-control validate" name = "password2">
@@ -135,3 +142,16 @@ aria-hidden="true">
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+function logout(){
+      $.ajax({
+      type: "POST",
+      url: "/logout_user",
+      error: function (request, status, error) {
+          alert(request.responseText);
+      }
+    });
+  }
+
+</script>

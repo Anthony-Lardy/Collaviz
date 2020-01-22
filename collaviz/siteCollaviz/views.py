@@ -7,7 +7,8 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from siteCollaviz.forms import SignUpForm
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import csrf_exempt
 
 def collaviz(request):
     if request.method == 'POST' and 'fichier' in request.POST:
@@ -25,6 +26,7 @@ def collaviz(request):
         register(request)
     return render(request, 'siteCollaviz/accueil.html')
 
+@csrf_exempt
 def register(request):
     form = SignUpForm(request.POST)
     if form.is_valid():
@@ -32,9 +34,18 @@ def register(request):
         username = form.cleaned_data.get('username')
         raw_password = form.cleaned_data.get('password1')
         email = form.cleaned_data.get('email')
-        user = authenticate(request, username=username, password=raw_password)
+        user = authenticate(request, username=username, password=raw_password, email=email)
         login(request, user)
         return redirect('siteCollaviz/accueil.html')
     else:
         print(form.errors.as_data())
     return render(request, 'siteCollaviz/accueil.html', {'form': form})
+
+@csrf_exempt
+def login_user(request):
+    login()
+
+@csrf_exempt
+def logout_user(request):
+    logout(request)
+    return redirect('siteCollaviz/accueil.html')

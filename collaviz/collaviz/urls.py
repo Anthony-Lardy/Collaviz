@@ -21,9 +21,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-path('admin/', admin.site.urls),
-path('collaviz', views.collaviz),
-path('register', views.register),
+    path('admin/', admin.site.urls),
+    path('collaviz', views.collaviz),
+    path('register', views.register),
+    path("logout_user", views.logout_user, name="logout_user"),
+    path("login_user", views.login_user, name="login_user"),
 ]
 
 
