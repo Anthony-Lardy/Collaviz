@@ -2,11 +2,8 @@
 {% load static %}
 
 {% block content %}
-{% if request.method == "POST" %}
 
 <div class="text-center">
-  <button type="button" name="button" onclick="afficherChart({{donnees}})"></button>
-  {%endif %}
   <div class="container">
     <div class="row justify-content-md-center text-center">
       <div id="insertionFichier">
@@ -44,6 +41,8 @@
       <h2>Mapping</h2>
     </div>
   </div>
+
+  <div class="container">
   <div id="mapping" class="row">
     <div class="col-12">
       {% if request.method == "POST" %}
@@ -74,11 +73,11 @@
     <div class="row col-12">
       <div class="col-6">
         <label>"Répondre à un message : "</label>
-        <input class="w3-input" type="text">
+        <input id="repondreMessage" class="w3-input" type="text">
       </div>
       <div class="col-6">
-        <label>"Créer un nouveau message :"</label>
-        <input class="w3-input" type="text">
+        <label>"Poster un nouveau message :"</label>
+        <input id="creerMessage" class="w3-input" type="text">
       </div>
     </div>
     <div id="attribut" class="col-4">
@@ -88,22 +87,24 @@
     <div class="row col-12">
       <div class="col-4">
         <label>"idForum : "</label>
-        <input class="w3-input" type="text">
+        <input id="idForum" class="w3-input" type="text">
       </div>
       <div class="col-4">
         <label>"idMessage :"</label>
-        <input class="w3-input" type="text">
+        <input id="idMessage"  class="w3-input" type="text">
       </div>
       <div class="col-4">
         <label>"idParent :"</label>
-        <input class="w3-input" type="text">
+        <input id="idParent" class="w3-input" type="text">
       </div>
       <div class="col-3">
       <button type="button" id="validerMapping" class="btn btn-success">Valider le mapping</button>
       </div>
     </div>
+  </div>
+</div>
         <br><br><br><br><br>
-    <div class="row" id="test">
+    <div class="row" >
       <div class="col-1">
         <div id="toolbar" class="icon-bar">
           <a id="graphCamembert" ><i class="fas fa-chart-pie"></i></a>
@@ -111,23 +112,22 @@
           <a id="graphBarre"><i class="fas fa-chart-bar"></i></a>
         </div>
         </div>
-        <div class="gridly col-11">
+        <div class="row gridly col-11">
         </div>
 
 
         </div>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-
-
+</div>
   <script type="text/javascript">
 
     i = 0;
+    var user;
     $( "#graph" ).on( "click", function() {
       ajouterCadre();
-      var utilisateurs = ["mmay", "gachort", "tdelille"];
-      var action = ["Répondre à un message","Poster un nouveau message"];
-      selectCreator(utilisateurs, "multiple", "utilisateur");
+      var action = ["Répondre à un message","Poster un nouveau message", ];
+      selectCreator(user, "multiple", "utilisateur");
       selectCreator(action, "", "actions");
       ($('.brick').last()).append('<input class="dateDeb" type="date"/>');
       ($('.brick').last()).append('<input class="dateFin" type="date"/>');
@@ -144,11 +144,8 @@
       $(t).parent().find(".utilisateur :selected").each(function() {
         utilisateurs.push($(this).val());
       });
-
-      var dateDeb = "2009-02-12";
-      var dateFin = "2009-02-13";
-      //var dateDeb = $(t).parent().find(".dateDeb").val();
-    //  var dateFin = $(t).parent().find(".dateFin").val();
+      var dateDeb = $(t).parent().find(".dateDeb").val();
+      var dateFin = $(t).parent().find(".dateFin").val();
       var cont = $(t).parent().find(".cont").attr('id');
       $.ajax({
       type: "POST",
@@ -159,12 +156,18 @@
       dateFin: dateFin,
     },
       success: function (data) {
-        chart = ajouterGraph(cont);
+        annee = parseInt(dateDeb.substr(0, 4));
+        mois = parseInt(dateDeb.substr(5, 2))-1;
+        jour = parseInt(dateDeb.substr(8, 2));
+
+        chart = ajouterGraph(cont, date);
 
         for (var i = 0; i<data.length; i++){
           var options = {
               name: utilisateurs[i],
               data: data[i],
+              pointStart: Date.UTC(annee, mois, jour),
+              pointInterval: 24 * 3600 * 1000,
           }
           chart.addSeries( options, true );
         }
@@ -198,7 +201,7 @@
 
 
     function ajouterCadre(event){
-      $('.gridly').append("<div  class='brick'><button class='delete'>&times;</butto></div>");
+      $('.gridly').append("<div class='brick'><div class='row'><div class='col-11'></div><button  class='delete delButton col-1'><i class='fas fa-times'></i></button></div></div>");
       $('.gridly').gridly();
       $( ".delete" ).click(function( event ) {
         $(this).closest('.brick').remove();
@@ -207,7 +210,7 @@
 
 
 
-    function ajouterGraph(container){
+    function ajouterGraph(container, date){
       var chart = Highcharts.chart(container, {
 
       title: {
@@ -230,13 +233,17 @@
           align: 'right',
           verticalAlign: 'middle'
       },
+      xAxis: {
+             type: 'datetime'
+         },
 
       plotOptions: {
           series: {
               label: {
                   connectorAllowed: false
               },
-              pointStart: Date.UTC(2009, 9, 6, 0, 0, 0)
+              pointStart: date,
+           pointInterval: 24 * 3600 * 1000
           }
       },
 
@@ -282,8 +289,9 @@
                  date: $("#dateCol").find('option:selected').text(), titre: $("#actionCol").find('option:selected').text(), attribut: $("#attributCol").find('option:selected').text(),
                   repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), forum: $("#idForum").val(),
                   message: $("#idMessage").val(), parent: $("#idParent").val()},
-                 success: function (data, text) {
-
+                 success: function (data) {
+                   alert(data);
+                   user = data;
                  },
                  error: function (request, status, error) {
                      alert(request.responseText);

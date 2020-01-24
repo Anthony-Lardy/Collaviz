@@ -4,14 +4,20 @@ from django.core.files.storage import FileSystemStorage
 from siteCollaviz import classifier
 from siteCollaviz import file
 from siteCollaviz import mapping
-from siteCollaviz import graph
+from siteCollaviz import actionParTemps
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 import numpy as np
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from siteCollaviz.forms import SignUpForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import csrf_exempt
 
 def collaviz(request):
-    if request.method == 'POST' and 'fichier' in request.POST:
+    if request.method == 'POST' and request.FILES['fichier']:
         folder='media/tmp/'
         myfile = request.FILES['fichier']
         fs = FileSystemStorage(location=folder)
@@ -31,9 +37,10 @@ def collaviz(request):
 @csrf_exempt
 def mappingDonnees(request):
     if request.is_ajax() and request.method == 'POST':
-        mapping.mapping(request.POST['fichier'], request.POST['utilisateur'], request.POST['date'], request.POST['heure'],
-        request.POST['titre'], request.POST['attribut'], request.POST['repondre'], request.POST['poster'], request.POST['forum'],
-         request.POST['message'], request.POST['parent'])
+        mapping.mapping(request.POST['fichier'], request.POST['utilisateur'], request.POST['date'], request.POST['heure'], request.POST['titre'], request.POST['attribut'], request.POST['repondre'], request.POST['poster'], request.POST['forum'],
+        request.POST['message'], request.POST['parent'])
+        data = actionParTemps.getUsers()
+        return JsonResponse(data, safe=False)
     return render(request, 'siteCollaviz/accueil.html')
 
 @csrf_exempt
@@ -41,10 +48,11 @@ def validerParams(request):
         if request.is_ajax() and request.method == 'POST':
             array_data = request.POST['utilisateurs']
             utilisateurs = json.loads(array_data)
-            data = graph.actionParTemps(utilisateurs, request.POST.get('actions'), request.POST['dateDeb'], request.POST['dateFin'])
+            data = actionParTemps.actionParTemps(utilisateurs, request.POST.get('actions'), request.POST['dateDeb'], request.POST['dateFin'])
             return JsonResponse(data, safe=False)
         return render(request, 'siteCollaviz/accueil.html')
 
+@csrf_exempt
 def register(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)

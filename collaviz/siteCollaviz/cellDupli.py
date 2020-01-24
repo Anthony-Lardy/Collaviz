@@ -12,4 +12,4 @@ def duppliCellulelist(fichier, colonne, separateur):
             row_list.append(row.to_dict(OrderedDict))
     newData = pd.DataFrame(row_list, columns=data.columns)
     fichier = fichier.replace('.csv','')
-    newData.to_csv(fichier + "DuppliCell" + ".csv", encoding='utf-8')
+    newData.to_csv(fichier + "DuppliCell" + ".csv", encoding='utf-8', index=False)

@@ -12,13 +12,13 @@ def mapping(fichier, utilisateur, date, heure, titre, attribut, repondre, poster
     }
     new_data = new_data.rename(columns=columns_dict)
     cell_dict_Action = {
-        repondre: "Répondre à un message test",
-        poster: "Poster un nouveau message test",
+        repondre: "Répondre à un message",
+        poster: "Poster un nouveau message",
     }
     new_data = new_data.rename(columns=columns_dict)
     new_data["Action"] = new_data["Action"].replace(cell_dict_Action)
-    new_data["Attribut"] = new_data["Attribut"].replace(regex=[forum], value='IDFORUMTEST=')
-    new_data["Attribut"] = new_data["Attribut"].replace(regex=[message], value='IDMSGTEST=')
-    new_data["Attribut"] = new_data["Attribut"].replace(regex=[parent], value='IDPARENTTEST=')
+    new_data["Attribut"] = new_data["Attribut"].replace(regex=[forum], value='IDFORUM=')
+    new_data["Attribut"] = new_data["Attribut"].replace(regex=[message], value='IDMSG=')
+    new_data["Attribut"] = new_data["Attribut"].replace(regex=[parent], value='IDPARENT=')
     fichier = fichier.replace('.csv','')
-    new_data.to_csv('./media/tmp/'+fichier + "Mapping" + ".csv", encoding='utf-8')
+    new_data.to_csv('./media/tmp/'+fichier + "Mapping" + ".csv", encoding='utf-8', index=False)

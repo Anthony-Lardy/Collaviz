@@ -22,7 +22,6 @@
     <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js" type="text/javascript"></script>
     <script src="{% static 'siteCollaviz/jquery.gridly.js' %}" type="text/javascript"></script>
     <link href="{% static 'siteCollaviz/jquery.gridly.css' %}" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -66,7 +65,8 @@
   </nav>
   {% block content %}
   {% endblock %}
-
+</div>
+</div>
 </body>
 </html>
 
@@ -97,7 +97,7 @@ aria-hidden="true">
 
       </div>
       <div class="modal-footer d-flex justify-content-center">
-        <button class="btn btn-default" type="submit" onclick="signIn()">Login</button>
+        <button class="btn btn-default"  onclick="signIn()">Login</button>
       </div>
     </form>
   </div>
@@ -164,9 +164,6 @@ function logout(){
         $.ajax({
         type: "POST",
         url: "/login_user",
-        success: function(){
-          alert('Oui');
-        },
         error: function (request, status, error) {
             alert(request.responseText);
         }

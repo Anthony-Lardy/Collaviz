@@ -38,9 +38,19 @@ z-index: -1;
 
 
 
-  .brick{
-    width: 670px;
+.brick{
+    width: 630px;
     height: 500px;
     border: dashed grey;
     background-color: grey;
+  }
+
+
+.delButton {
+      background-color: Transparent;
+      background-repeat:no-repeat;
+      border: none;
+      cursor:pointer;
+      overflow: hidden;
+      outline:none;
   }
