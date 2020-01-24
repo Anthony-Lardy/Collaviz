@@ -41,14 +41,15 @@
       <div class="row justify-content-md-center">
         <h2>Mapping</h2>
       </div>
-    </div>
-    <div id="mapping" class="row">
+    </div>            {% csrf_token %}
+
+    <div id="mapping" class="row justify-content-md-center">
       <div class="col-12">
         {% if request.method == "POST" %}
         <select class="browser-default custom-select" id="mappingFichier" onchange="getColonnes()">
-          <option selected disabled value=""></option>
+          <option name="null" selected disabled value="test"></option>
           {% for o in file %}
-          <option value="{{o}}">{{o}}</option>
+          <option  value="{{o}}">{{o}}</option>
           {% endfor %}
         </select>
         {%endif %}
@@ -72,11 +73,11 @@
       <div class="row col-12">
         <div class="col-6">
           <label>"Répondre à un message : "</label>
-          <input class="w3-input" type="text">
+          <input id="repondreMessage" class="w3-input" type="text">
         </div>
         <div class="col-6">
           <label>"Créer un nouveau message :"</label>
-          <input class="w3-input" type="text">
+          <input id="creerMessage" class="w3-input" type="text">
         </div>
       </div>
       <div id="attribut" class="col-4">
@@ -85,87 +86,219 @@
       </div><br><br><br><br>
       <div class="row col-12">
         <div class="col-4">
-          <label>"idForum : "</label>
-          <input class="w3-input" type="text">
+          <label>idForum : </label>
+          <input id="idForum" class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"idMessage :"</label>
-          <input class="w3-input" type="text">
+          <label>idMessage :</label>
+          <input id="idMessage" class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"idParent :"</label>
-          <input class="w3-input" type="text">
+          <label>idParent :</label>
+          <input id="idParent" class="w3-input" type="text">
         </div>
+      </div>
+      <div class="col-3">
+      <button type="button" id="validerMapping" class="btn btn-success">Valider le mapping</button>
       </div>
     </div>
         <br><br><br><br><br>
-    <div class="row justify-content-md-center"><div class="col-11">
-      <div id="toolbar" class="icon-bar">
-          <a href=""><i class="fas fa-chart-pie"></i></a>
-          <a href=""><i class="fas fa-chart-area"></i></a>
-          <a href=""><i class="fas fa-chart-bar"></i></a>
+    <div class="row" id="test">
+      <div class="col-1">
+        <div id="toolbar" class="icon-bar">
+          <a id="graphCamembert" ><i class="fas fa-chart-pie"></i></a>
+          <a id="graph" ><i class="fas fa-chart-area"></i></a>
+          <a id="graphBarre"><i class="fas fa-chart-bar"></i></a>
         </div>
-        </div></div>
+        </div>
+        <div class="gridly col-11">
+        </div>
+
+
+        </div>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 
 
   <script type="text/javascript">
 
-    function afficherChart(donnees) {
-      var chart = Highcharts.chart('cont', {
-        chart: {
-          type: 'column'
-        },
-        title: {
-          text: 'Nombre de connexions de chaque utilisateur'
-        },
-        xAxis: {
-          type: 'category',
-          labels: {
-            rotation: -45,
-            style: {
-              fontSize: '13px',
-              fontFamily: 'Verdana, sans-serif'
-            }
-          }
-        },
-        yAxis: {
-          min: 0,
-          title: {
-            text: 'Nombre de connexions'
-          }
-        },
-        legend: {
-          enabled: false
-        },
-        tooltip: {
-          pointFormat: 'Nombre de connexions: <b>{point.y:.1f}</b>'
-        },
-        series: [{
-          name: 'Connexions',
-          data: donnees,
-          dataLabels: {
-            enabled: true,
-            rotation: -90,
-            color: '#FFFFFF',
-            align: 'right',
-            y: 10,
-            style: {
-              fontSize: '13px',
-              fontFamily: 'Verdana, sans-serif'
-            }
-          }
-        }]
+    i = 0;
+    $( "#graph" ).on( "click", function() {
+      ajouterCadre();
+      var utilisateurs = ["mmay", "gachort", "tdelille"];
+      var action = ["Répondre à un message","Poster un nouveau message"];
+      selectCreator(utilisateurs, "multiple", "utilisateur");
+      selectCreator(action, "", "actions");
+      ($('.brick').last()).append('<input class="dateDeb" type="date"/>');
+      ($('.brick').last()).append('<input class="dateFin" type="date"/>');
+      ($('.brick').last()).append("<button type='button' onclick='validerParams(this)' class='btn btn-success envoyerParamsGraph'>Valider les paramètres</button>");
+      ($('.brick').last()).append("<div id='cont"+i+"' class='cont'></div>");
+      i++;
+
+    });
+
+
+    function validerParams(t){
+      var actions = $(t).parent().find(".actions").find(':selected').text();
+      var utilisateurs = [];
+      $(t).parent().find(".utilisateur :selected").each(function() {
+        utilisateurs.push($(this).val());
       });
 
+      var dateDeb = "2009-02-12";
+      var dateFin = "2009-02-13";
+      //var dateDeb = $(t).parent().find(".dateDeb").val();
+    //  var dateFin = $(t).parent().find(".dateFin").val();
+      var cont = $(t).parent().find(".cont").attr('id');
+      $.ajax({
+      type: "POST",
+      url: "/validerParams",
+      data: {utilisateurs: JSON.stringify(utilisateurs),
+        actions: actions,
+        dateDeb: dateDeb,
+      dateFin: dateFin,
+    },
+      success: function (data) {
+        chart = ajouterGraph(cont);
 
-      $("#cont").draggable();
-      $("#cont").resizable();
-      $("#cont").resize(function() {
-        chart.reflow()
+        for (var i = 0; i<data.length; i++){
+          var options = {
+              name: utilisateurs[i],
+              data: data[i],
+          }
+          chart.addSeries( options, true );
+        }
+
+
+
+      },
+      error: function (request, status, error) {
+        alert(request.responseText);
+         }
+    });
+  }
+
+
+
+
+
+    function selectCreator(tableau, multiple, type){
+      var $select = $('<select/>', {
+         'class':"selectpicker "+type
+    });
+    $select.prop("multiple",multiple);
+
+    for (var idx in tableau) {
+        $select.append('<option  value=' + tableau[idx] + '>' + tableau[idx] + '</option>');
+    }
+
+    $select.appendTo($('.brick').last()).selectpicker('refresh');
+
+    }
+
+
+    function ajouterCadre(event){
+      $('.gridly').append("<div  class='brick'><button class='delete'>&times;</butto></div>");
+      $('.gridly').gridly();
+      $( ".delete" ).click(function( event ) {
+        $(this).closest('.brick').remove();
       });
     }
+
+
+
+    function ajouterGraph(container){
+      var chart = Highcharts.chart(container, {
+
+      title: {
+          text: 'Graphe'
+      },
+
+      subtitle: {
+          text: "Graphe du nombre d'action dans le temps"
+      },
+
+      yAxis: {
+          title: {
+              text: 'nombre de fois'
+          }
+      },
+
+
+      legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle'
+      },
+
+      plotOptions: {
+          series: {
+              label: {
+                  connectorAllowed: false
+              },
+              pointStart: Date.UTC(2009, 9, 6, 0, 0, 0)
+          }
+      },
+
+
+      responsive: {
+          rules: [{
+              condition: {
+                  maxWidth: 500
+              },
+              chartOptions: {
+                  legend: {
+                      layout: 'horizontal',
+                      align: 'center',
+                      verticalAlign: 'bottom'
+                  }
+              }
+          }]
+      }
+
+      });
+      return chart;
+    }
+
+
+    $( ".delete" ).click(function( event ) {
+
+      $(this).closest('.brick').remove();
+    });
+
+      $('.gridly').gridly({
+        base: 100, // px
+        gutter: 20, // px
+        columns: 12
+      });
+    $(function() {
+
+          $("#validerMapping").click( function()
+               {  $("#idMessage").val();
+                 $.ajax({
+                 type: "POST",
+                 url: "/mappingDonnees",
+                 data: {fichier: $("#mappingFichier").find('option:selected').text(), utilisateur: $("#utilisateurCol").find('option:selected').text(), heure: $("#heureCol").find('option:selected').text(),
+                 date: $("#dateCol").find('option:selected').text(), titre: $("#actionCol").find('option:selected').text(), attribut: $("#attributCol").find('option:selected').text(),
+                  repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), forum: $("#idForum").val(),
+                  message: $("#idMessage").val(), parent: $("#idParent").val()},
+                 success: function (data, text) {
+
+                 },
+                 error: function (request, status, error) {
+                     alert(request.responseText);
+                 }
+                }
+                );
+               }
+          );
+    });
+
+
+
+
+
+
 
 
     function afficherTableau() {

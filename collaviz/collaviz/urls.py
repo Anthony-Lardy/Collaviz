@@ -22,6 +22,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('collaviz', views.collaviz),
+    path('mappingDonnees', views.mappingDonnees),
+    path('validerParams', views.validerParams),
+
 ]
 
 

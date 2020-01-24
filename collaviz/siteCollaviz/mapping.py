@@ -1,5 +1,7 @@
+import pandas as pd
 def mapping(fichier, utilisateur, date, heure, titre, attribut, repondre, poster, forum, message, parent):
-    data = pd.read_csv(fichier, encoding="latin-1")
+    print("date :" + date)
+    data = pd.read_csv('./media/tmp/'+fichier, encoding="utf-8")
     new_data = data[[utilisateur, date, heure, titre, attribut]]
     columns_dict = {
         utilisateur: "Utilisateur",
@@ -19,4 +21,4 @@ def mapping(fichier, utilisateur, date, heure, titre, attribut, repondre, poster
     new_data["Attribut"] = new_data["Attribut"].replace(regex=[message], value='IDMSGTEST=')
     new_data["Attribut"] = new_data["Attribut"].replace(regex=[parent], value='IDPARENTTEST=')
     fichier = fichier.replace('.csv','')
-    new_data.to_csv(fichier + "Mapping" + ".csv", encoding='utf-8')
+    new_data.to_csv('./media/tmp/'+fichier + "Mapping" + ".csv", encoding='utf-8')

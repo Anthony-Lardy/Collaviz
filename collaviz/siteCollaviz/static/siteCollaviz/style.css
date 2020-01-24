@@ -35,3 +35,12 @@ z-index: -1;
 .icon-bar a:hover {
   background-color: #000;
 }
+
+
+
+  .brick{
+    width: 670px;
+    height: 500px;
+    border: dashed grey;
+    background-color: grey;
+  }

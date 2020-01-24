@@ -3,6 +3,7 @@ import pandas as pd
 import csv
 import os
 from datetime import datetime
+import unidecode
 folder = "./media/tmp/"
 def is_create(line):
     return 'CREATE TABLE' in line or False
@@ -44,6 +45,7 @@ def sql_to_csv(sqlfile):
     nb_table = 0
     insert = False
     for line in lines:
+        line = unidecode.unidecode(line)
         if insert and (not is_insert(line)):
             writer = csv.writer(file)
             writer.writerow(line[1:-2].split(", "))
@@ -64,7 +66,7 @@ def nbActions(data, Action, Utilisateur):
     return data[(data['Titre'] == Action) & (data['Utilisateur'] == Utilisateur)].count()['IDTran']
 
 def nbActionsall(file, Action):
-  data = pd.read_csv(file, encoding = "latin-1")
+  data = pd.read_csv(file, encoding = "utf-8")
   data.head()
   all = []
   utilisateurs = data['Utilisateur'].unique().tolist()
