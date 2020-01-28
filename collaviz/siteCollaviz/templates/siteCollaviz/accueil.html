@@ -35,126 +35,166 @@
     {%endif %}
     <div id="csv-display"> </div>
   </div>
+  <!--Séparateur------------>
+  <div class="container">
+    <div class="row justify-content-md-center">
+      <h2>Séparateur</h2>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-8">
+      </div>
+      <div class="col-4">
+        <label>"Séparateur :"</label>
+      </div>
+      <div class="col-4">
+        <label></label>
+        <select class="browser-default custom-select" id="separateurFichier">
+          <option selected disabled value=""></option>
+          {% for o in file %}
+          <option value="{{o}}">{{o}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div id="separateur" class="col-4">
+        <label></label>
+        <select id="separateurCol" class="browser-default custom-select"> </select>
+      </div>
+      <div id="heure" class="col-4">
+        <input id="separateurText" class="w3-input" type="text">
+      </div>
+    </div><br><br>
+    <div class="row justify-content-md-center">
+      <button type="button" id="validerSeparateur" class="btn btn-success">Valider le séparateur</button>
+    </div>
+  </div>
   <!--Mapping------------>
   <div class="container">
     <div class="row justify-content-md-center">
       <h2>Mapping</h2>
     </div>
   </div>
-
   <div class="container">
-  <div id="mapping" class="row">
-    <div class="col-12">
-      {% if request.method == "POST" %}
-      <select class="browser-default custom-select" id="mappingFichier" onchange="getColonnes()">
-        <option selected disabled value=""></option>
-        {% for o in file %}
-        <option value="{{o}}">{{o}}</option>
-        {% endfor %}
-      </select>
-      {%endif %}
-    </div>
-    <div id="user" class="col-4">
-      <h4>Utilisateur : </h4>
-      <select id="utilisateurCol" class="browser-default custom-select"> </select>
-    </div>
-    <div id="date" class="col-4">
-      <h4>Date : </h4>
-      <select id="dateCol" class="browser-default custom-select"> </select>
-    </div>
-    <div id="heure" class="col-4">
-      <h4>Heure : </h4>
-      <select id="heureCol" class="browser-default custom-select"> </select>
-    </div><br><br><br><br><br>
-    <div id="action" class="col-4">
-      <h4>Action : </h4>
-      <select id="actionCol" class="browser-default custom-select"></select>
-    </div><br><br><br><br>
-    <div class="row col-12">
-      <div class="col-6">
-        <label>"Répondre à un message : "</label>
-        <input id="repondreMessage" class="w3-input" type="text">
+    <div id="mapping" class="row">
+      <div class="col-12">
+        {% if request.method == "POST" %}
+        <select class="browser-default custom-select" id="mappingFichier">
+          <option selected disabled value=""></option>
+          {% for o in file %}
+          <option value="{{o}}">{{o}}</option>
+          {% endfor %}
+        </select>
+        {%endif %}
       </div>
-      <div class="col-6">
-        <label>"Poster un nouveau message :"</label>
-        <input id="creerMessage" class="w3-input" type="text">
+      <div id="user" class="col-4">
+        <h4>Utilisateur : </h4>
+        <select id="utilisateurCol" class="browser-default custom-select"> </select>
       </div>
-    </div>
-    <div id="attribut" class="col-4">
-      <h4>Attribut : </h4>
-      <select id="attributCol" class="browser-default custom-select"></select>
-    </div><br><br><br><br>
-    <div class="row col-12">
-      <div class="col-4">
-        <label>"idForum : "</label>
-        <input id="idForum" class="w3-input" type="text">
+      <div id="date" class="col-4">
+        <h4>Date : </h4>
+        <select id="dateCol" class="browser-default custom-select"> </select>
       </div>
-      <div class="col-4">
-        <label>"idMessage :"</label>
-        <input id="idMessage"  class="w3-input" type="text">
+      <div id="heure" class="col-4">
+        <h4>Heure : </h4>
+        <select id="heureCol" class="browser-default custom-select"> </select>
+      </div><br><br><br><br><br>
+      <div id="action" class="col-4">
+        <h4>Action : </h4>
+        <select id="actionCol" class="browser-default custom-select"></select>
+      </div><br><br><br><br>
+      <div class="row col-12">
+        <div class="col-6">
+          <label>"Répondre à un message : "</label>
+          <input id="repondreMessage" class="w3-input" type="text">
+        </div>
+        <div class="col-6">
+          <label>"Poster un nouveau message :"</label>
+          <input id="creerMessage" class="w3-input" type="text">
+        </div>
       </div>
-      <div class="col-4">
-        <label>"idParent :"</label>
-        <input id="idParent" class="w3-input" type="text">
-      </div>
-      <div class="col-3">
-      <button type="button" id="validerMapping" class="btn btn-success">Valider le mapping</button>
+      <div id="attribut" class="col-4">
+        <h4>Attribut : </h4>
+        <select id="attributCol" class="browser-default custom-select"></select>
+      </div><br><br><br><br>
+      <div class="row col-12">
+        <div class="col-4">
+          <label>"idForum : "</label>
+          <input id="idForum" class="w3-input" type="text">
+        </div>
+        <div class="col-4">
+          <label>"idMessage :"</label>
+          <input id="idMessage"  class="w3-input" type="text">
+        </div>
+        <div class="col-4">
+          <label>"idParent :"</label>
+          <input id="idParent" class="w3-input" type="text">
+        </div>
+        <div class="col-3">
+          <button type="button" id="validerMapping" class="btn btn-success">Valider le mapping</button>
+        </div>
       </div>
     </div>
   </div>
+  <br><br><br><br><br>
+  <div class="row" >
+    <div class="col-1">
+      <div id="toolbar" class="icon-bar">
+        <a id="graphCamembert" ><i class="fas fa-chart-pie"></i></a>
+        <a id="graph" ><i class="fas fa-chart-area"></i></a>
+        <a id="graphBarre"><i class="fas fa-chart-bar"></i></a>
+      </div>
+    </div>
+    <div class="row gridly col-11">
+    </div>
+
+
+  </div>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
 </div>
-        <br><br><br><br><br>
-    <div class="row" >
-      <div class="col-1">
-        <div id="toolbar" class="icon-bar">
-          <a id="graphCamembert" ><i class="fas fa-chart-pie"></i></a>
-          <a id="graph" ><i class="fas fa-chart-area"></i></a>
-          <a id="graphBarre"><i class="fas fa-chart-bar"></i></a>
-        </div>
-        </div>
-        <div class="row gridly col-11">
-        </div>
+<script type="text/javascript">
 
+  i = 0;
+  var user;
+  $( "#graph" ).on( "click", function() {
+    ajouterCadre();
+    var action = ["Répondre à un message","Poster un nouveau message", ];
+    selectCreator(user, "multiple", "utilisateur");
+    selectCreator(action, "", "actions");
+    ($('.brick').last()).append('<input class="dateDeb" type="date"/>');
+    ($('.brick').last()).append('<input class="dateFin" type="date"/>');
+    ($('.brick').last()).append("<button type='button' onclick='validerParams(this)' class='btn btn-success envoyerParamsGraph'>Valider les paramètres</button>");
+    ($('.brick').last()).append("<div id='cont"+i+"' class='cont'></div>");
+    i++;
 
-        </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  });
 
-</div>
-  <script type="text/javascript">
+  $( "#mappingFichier" ).on( "change", function() {
+    getColonnesmapping($("#mappingFichier option:selected" ).text());
+  });
 
-    i = 0;
-    var user;
-    $( "#graph" ).on( "click", function() {
-      ajouterCadre();
-      var action = ["Répondre à un message","Poster un nouveau message", ];
-      selectCreator(user, "multiple", "utilisateur");
-      selectCreator(action, "", "actions");
-      ($('.brick').last()).append('<input class="dateDeb" type="date"/>');
-      ($('.brick').last()).append('<input class="dateFin" type="date"/>');
-      ($('.brick').last()).append("<button type='button' onclick='validerParams(this)' class='btn btn-success envoyerParamsGraph'>Valider les paramètres</button>");
-      ($('.brick').last()).append("<div id='cont"+i+"' class='cont'></div>");
-      i++;
+  $( "#separateurFichier" ).on( "change", function() {
+    getColonnesseparateur($("#separateurFichier option:selected" ).text());
+  });
 
+  function validerParams(t){
+    var actions = $(t).parent().find(".actions").find(':selected').text();
+    var utilisateurs = [];
+    $(t).parent().find(".utilisateur :selected").each(function() {
+      utilisateurs.push($(this).val());
     });
-
-
-    function validerParams(t){
-      var actions = $(t).parent().find(".actions").find(':selected').text();
-      var utilisateurs = [];
-      $(t).parent().find(".utilisateur :selected").each(function() {
-        utilisateurs.push($(this).val());
-      });
-      var dateDeb = $(t).parent().find(".dateDeb").val();
-      var dateFin = $(t).parent().find(".dateFin").val();
-      var cont = $(t).parent().find(".cont").attr('id');
-      $.ajax({
+    var dateDeb = $(t).parent().find(".dateDeb").val();
+    var dateFin = $(t).parent().find(".dateFin").val();
+    var cont = $(t).parent().find(".cont").attr('id');
+    $.ajax({
       type: "POST",
       url: "/validerParams",
       data: {utilisateurs: JSON.stringify(utilisateurs),
         actions: actions,
         dateDeb: dateDeb,
-      dateFin: dateFin,
-    },
+        dateFin: dateFin,
+      },
       success: function (data) {
         annee = parseInt(dateDeb.substr(0, 4));
         mois = parseInt(dateDeb.substr(5, 2))-1;
@@ -164,10 +204,10 @@
 
         for (var i = 0; i<data.length; i++){
           var options = {
-              name: utilisateurs[i],
-              data: data[i],
-              pointStart: Date.UTC(annee, mois, jour),
-              pointInterval: 24 * 3600 * 1000,
+            name: utilisateurs[i],
+            data: data[i],
+            pointStart: Date.UTC(annee, mois, jour),
+            pointInterval: 24 * 3600 * 1000,
           }
           chart.addSeries( options, true );
         }
@@ -177,7 +217,7 @@
       },
       error: function (request, status, error) {
         alert(request.responseText);
-         }
+      }
     });
   }
 
@@ -185,211 +225,251 @@
 
 
 
-    function selectCreator(tableau, multiple, type){
-      var $select = $('<select/>', {
-         'class':"selectpicker "+type
+  function selectCreator(tableau, multiple, type){
+    var $select = $('<select/>', {
+      'class':"selectpicker "+type
     });
     $select.prop("multiple",multiple);
 
     for (var idx in tableau) {
-        $select.append('<option  value=' + tableau[idx] + '>' + tableau[idx] + '</option>');
+      $select.append('<option  value=' + tableau[idx] + '>' + tableau[idx] + '</option>');
     }
 
     $select.appendTo($('.brick').last()).selectpicker('refresh');
 
-    }
+  }
 
 
-    function ajouterCadre(event){
-      $('.gridly').append("<div class='brick'><div class='row'><div class='col-11'></div><button  class='delete delButton col-1'><i class='fas fa-times'></i></button></div></div>");
-      $('.gridly').gridly();
-      $( ".delete" ).click(function( event ) {
-        $(this).closest('.brick').remove();
-      });
-    }
+  function ajouterCadre(event){
+    $('.gridly').append("<div class='brick'><div class='row'><div class='col-11'></div><button  class='delete delButton col-1'><i class='fas fa-times'></i></button></div></div>");
+    $('.gridly').gridly();
+    $( ".delete" ).click(function( event ) {
+      $(this).closest('.brick').remove();
+    });
+  }
 
 
 
-    function ajouterGraph(container, date){
-      var chart = Highcharts.chart(container, {
+  function ajouterGraph(container, date){
+    var chart = Highcharts.chart(container, {
 
       title: {
-          text: 'Graphe'
+        text: 'Graphe'
       },
 
       subtitle: {
-          text: "Graphe du nombre d'action dans le temps"
+        text: "Graphe du nombre d'action dans le temps"
       },
 
       yAxis: {
-          title: {
-              text: 'nombre de fois'
-          }
+        title: {
+          text: 'nombre de fois'
+        }
       },
 
 
       legend: {
-          layout: 'vertical',
-          align: 'right',
-          verticalAlign: 'middle'
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
       },
       xAxis: {
-             type: 'datetime'
-         },
+        type: 'datetime'
+      },
 
       plotOptions: {
-          series: {
-              label: {
-                  connectorAllowed: false
-              },
-              pointStart: date,
-           pointInterval: 24 * 3600 * 1000
-          }
+        series: {
+          label: {
+            connectorAllowed: false
+          },
+          pointStart: date,
+          pointInterval: 24 * 3600 * 1000
+        }
       },
 
 
       responsive: {
-          rules: [{
-              condition: {
-                  maxWidth: 500
-              },
-              chartOptions: {
-                  legend: {
-                      layout: 'horizontal',
-                      align: 'center',
-                      verticalAlign: 'bottom'
-                  }
-              }
-          }]
+        rules: [{
+          condition: {
+            maxWidth: 500
+          },
+          chartOptions: {
+            legend: {
+              layout: 'horizontal',
+              align: 'center',
+              verticalAlign: 'bottom'
+            }
+          }
+        }]
       }
 
-      });
-      return chart;
+    });
+    return chart;
+  }
+
+
+  $( ".delete" ).click(function( event ) {
+
+    $(this).closest('.brick').remove();
+  });
+
+  $('.gridly').gridly({
+    base: 100, // px
+    gutter: 20, // px
+    columns: 12
+  });
+
+
+  $(function() {
+
+    $("#validerMapping").click( function()
+    {  $("#idMessage").val();
+    $.ajax({
+      type: "POST",
+      url: "/mappingDonnees",
+      data: {fichier: $("#mappingFichier").find('option:selected').text(), utilisateur: $("#utilisateurCol").find('option:selected').text(), heure: $("#heureCol").find('option:selected').text(),
+      date: $("#dateCol").find('option:selected').text(), titre: $("#actionCol").find('option:selected').text(), attribut: $("#attributCol").find('option:selected').text(),
+      repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), forum: $("#idForum").val(),
+      message: $("#idMessage").val(), parent: $("#idParent").val()},
+      success: function (data) {
+        alert(data);
+        user = data;
+      },
+      error: function (request, status, error) {
+        alert(request.responseText);
+      }
     }
+    );
+  }
+  );
+});
 
+$(function() {
 
-    $( ".delete" ).click(function( event ) {
-
-      $(this).closest('.brick').remove();
-    });
-
-      $('.gridly').gridly({
-        base: 100, // px
-        gutter: 20, // px
-        columns: 12
-      });
-    $(function() {
-
-          $("#validerMapping").click( function()
-               {  $("#idMessage").val();
-                 $.ajax({
-                 type: "POST",
-                 url: "/mappingDonnees",
-                 data: {fichier: $("#mappingFichier").find('option:selected').text(), utilisateur: $("#utilisateurCol").find('option:selected').text(), heure: $("#heureCol").find('option:selected').text(),
-                 date: $("#dateCol").find('option:selected').text(), titre: $("#actionCol").find('option:selected').text(), attribut: $("#attributCol").find('option:selected').text(),
-                  repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), forum: $("#idForum").val(),
-                  message: $("#idMessage").val(), parent: $("#idParent").val()},
-                 success: function (data) {
-                   alert(data);
-                   user = data;
-                 },
-                 error: function (request, status, error) {
-                     alert(request.responseText);
-                 }
-                }
-                );
-               }
-          );
-    });
+  $("#validerSeparateur").click( function()
+  { $("#separateurText").val();
+  $.ajax({
+    type: "POST",
+    url: "/separateur",
+    data: {fichier: $("#separateurFichier").find('option:selected').text(), colonne: $("#separateurCol").find('option:selected').text(), separateur: $("#separateurText").val(),},
+  }
+  );
+}
+);
+});
 
 
 
 
 
 
+function afficherTableau() {
+  $.ajax({
+    url: "../media/tmp/" + $("#selectFile").val(),
+    dataType: "text",
+    success: function(data) {
+      data = $.csv.toArrays(data);
+      generateHtmlTable(data);
+    }
+  });
+}
 
+function getColonnesmapping(param) {
+  //utilisateur, date, heure, titre, attribut
+  $.ajax({
 
-    function afficherTableau() {
-      $.ajax({
-
-        url: "../media/tmp/" + $("#selectFile").val(),
-        dataType: "text",
-        success: function(data) {
-          data = $.csv.toArrays(data);
-          generateHtmlTable(data);
+    url: "../media/tmp/" + param,
+    dataType: "text",
+    success: function(data) {
+      selectNom = ["utilisateur", "date", "heure", "action", "attribut"];
+      var titre = data.trim().split('\n')[0].split(',');
+      for (var i = 0; i < selectNom.length; i++) {
+        $('#' + selectNom[i] + 'Col').html("");
+        $('#' + selectNom[i] + 'Col').append($('<option selected>', {
+          value: "",
+          text: ""
+        }));
+        for (var j = 0; j < titre.length; j++) {
+          $('#' + selectNom[i] + 'Col').append($('<option>', {
+            value: j,
+            text: titre[j]
+          }));
         }
 
-      });
-
+      }
     }
 
-    function getColonnes() {
-      //utilisateur, date, heure, titre, attribut
-      $.ajax({
+  });
 
-        url: "../media/tmp/" + $("#mappingFichier").val(),
-        dataType: "text",
-        success: function(data) {
-          selectNom = ["utilisateur", "date", "heure", "action", "attribut"];
-          var titre = data.trim().split('\n')[0].split(',');
-          for (var i = 0; i < selectNom.length; i++) {
-            $('#' + selectNom[i] + 'Col').html("");
-            $('#' + selectNom[i] + 'Col').append($('<option selected>', {
-              value: "",
-              text: ""
-            }));
-            for (var j = 0; j < titre.length; j++) {
-              $('#' + selectNom[i] + 'Col').append($('<option>', {
-                value: j,
-                text: titre[j]
-              }));
-            }
+}
 
-          }
+function getColonnesseparateur(param) {
+  //utilisateur, date, heure, titre, attribut
+  $.ajax({
+
+    url: "../media/tmp/" + param,
+    dataType: "text",
+    success: function(data) {
+      selectNom = ["separateur"];
+      var titre = data.trim().split('\n')[0].split(',');
+      for (var i = 0; i < selectNom.length; i++) {
+        $('#' + selectNom[i] + 'Col').html("");
+        $('#' + selectNom[i] + 'Col').append($('<option selected>', {
+          value: "",
+          text: ""
+        }));
+        for (var j = 0; j < titre.length; j++) {
+          $('#' + selectNom[i] + 'Col').append($('<option>', {
+            value: j,
+            text: titre[j]
+          }));
         }
 
-      });
-
+      }
     }
 
-    function generateHtmlTable(data) {
+  });
 
-      var html = '<table id="table" class="table table-condensed table-hover table-striped">';
+}
 
-        if (typeof(data[0]) === 'undefined') {
-          return null;
-        } else {
-          $.each(data, function(index, row) {
-            //bind header
-            if (index == 0) {
-              html += '<thead>';
-                html += '<tr>';
-                  $.each(row, function(index, colData) {
-                    html += '<th>';
-                      html += colData;
-                      html += '</th>';
-                    });
-                    html += '</tr>';
-                    html += '</thead>';
-                    html += '<tbody>';
-                    } else {
-                      html += '<tr>';
-                        $.each(row, function(index, colData) {
-                          html += '<td>';
-                            html += colData;
-                            html += '</td>';
-                          });
-                          html += '</tr>';
-                        }
+function generateHtmlTable(data) {
+
+  var html = '<table id="table" class="table table-condensed table-hover table-striped">';
+
+    if (typeof(data[0]) === 'undefined') {
+      return null;
+    } else {
+      $.each(data, function(index, row) {
+        //bind header
+        if (index == 0) {
+          html += '<thead>';
+            html += '<tr>';
+              $.each(row, function(index, colData) {
+                html += '<th>';
+                  html += colData;
+                  html += '</th>';
+                });
+                html += '</tr>';
+                html += '</thead>';
+                html += '<tbody>';
+                } else {
+                  html += '<tr>';
+                    $.each(row, function(index, colData) {
+                      html += '<td>';
+                        html += colData;
+                        html += '</td>';
                       });
-                      html += '</tbody>';
-                      html += '</table>';
-                      $('#csv-display').html(html);
+                      html += '</tr>';
                     }
-                    $('#table').DataTable();
+                  });
+                  html += '</tbody>';
+                  html += '</table>';
+                  $('#csv-display').html(html);
+                }
+                $('#table').DataTable();
 
-                  }
-                </script>
+              }
+            </script>
 
 
-                {% endblock %}
+            {% endblock %}

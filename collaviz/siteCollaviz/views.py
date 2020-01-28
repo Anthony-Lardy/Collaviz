@@ -5,19 +5,22 @@ from siteCollaviz import classifier
 from siteCollaviz import file
 from siteCollaviz import mapping
 from siteCollaviz import actionParTemps
+from siteCollaviz import cellDupli
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 import numpy as np
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from siteCollaviz.forms import SignUpForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def collaviz(request):
-    if request.method == 'POST' and request.FILES['fichier']:
+    if request.method == 'POST' and 'fichier' in request.FILES:
         folder='media/tmp/'
         myfile = request.FILES['fichier']
         fs = FileSystemStorage(location=folder)
@@ -42,6 +45,12 @@ def mappingDonnees(request):
         data = actionParTemps.getUsers()
         return JsonResponse(data, safe=False)
     return render(request, 'siteCollaviz/accueil.html')
+
+@csrf_exempt
+def separateur(request):
+    if request.is_ajax() and request.method == 'POST':
+        cellDupli.duppliCellulelist(request.POST['fichier'], request.POST['colonne'], request.POST['separateur'])
+    return HttpResponseRedirect(request.path_info)
 
 @csrf_exempt
 def validerParams(request):
