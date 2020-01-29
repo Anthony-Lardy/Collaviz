@@ -102,15 +102,23 @@
       <div id="action" class="col-4">
         <h4>Action : </h4>
         <select id="actionCol" class="browser-default custom-select"></select>
+      </div>
+      <div id="delai" class="col-4">
+        <h4>Delai : </h4>
+        <select id="delaiCol" class="browser-default custom-select"></select>
       </div><br><br><br><br>
       <div class="row col-12">
-        <div class="col-6">
+        <div class="col-4">
           <label>"Répondre à un message : "</label>
           <input id="repondreMessage" class="w3-input" type="text">
         </div>
-        <div class="col-6">
+        <div class="col-4">
           <label>"Poster un nouveau message :"</label>
           <input id="creerMessage" class="w3-input" type="text">
+        </div>
+        <div class="col-4">
+          <label>"Connexion :"</label>
+          <input id="connexion" class="w3-input" type="text">
         </div>
       </div>
       <div id="attribut" class="col-4">
@@ -328,9 +336,9 @@
       type: "POST",
       url: "/mappingDonnees",
       data: {fichier: $("#mappingFichier").find('option:selected').text(), utilisateur: $("#utilisateurCol").find('option:selected').text(), heure: $("#heureCol").find('option:selected').text(),
-      date: $("#dateCol").find('option:selected').text(), titre: $("#actionCol").find('option:selected').text(), attribut: $("#attributCol").find('option:selected').text(),
-      repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), forum: $("#idForum").val(),
-      message: $("#idMessage").val(), parent: $("#idParent").val()},
+      date: $("#dateCol").find('option:selected').text(), titre: $("#actionCol").find('option:selected').text(), attribut: $("#attributCol").find('option:selected').text(), delai: $("#delaiCol").find('option:selected').text(),
+      repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), connexion: $("#connexion").val(),
+      forum: $("#idForum").val(), message: $("#idMessage").val(), parent: $("#idParent").val()},
       success: function (data) {
         alert(data);
         user = data;
@@ -381,7 +389,7 @@ function getColonnesmapping(param) {
     url: "../media/tmp/" + param,
     dataType: "text",
     success: function(data) {
-      selectNom = ["utilisateur", "date", "heure", "action", "attribut"];
+      selectNom = ["utilisateur", "date", "heure", "action", "attribut", "delai"];
       var titre = data.trim().split('\n')[0].split(',');
       for (var i = 0; i < selectNom.length; i++) {
         $('#' + selectNom[i] + 'Col').html("");
