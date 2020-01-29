@@ -145,10 +145,8 @@
         <a id="graphBarre"><i class="fas fa-chart-bar"></i></a>
       </div>
     </div>
-    <div class="row gridly col-11">
+    <div class="gridly col">
     </div>
-
-
   </div>
   <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
@@ -159,13 +157,17 @@
   var user;
   $( "#graph" ).on( "click", function() {
     ajouterCadre();
-    var action = ["Répondre à un message","Poster un nouveau message", ];
+    var action = ["Répondre à un message","Poster un nouveau message"];
+    var nomFichier = ['Test.csv'];
+    ($('.brick').last()).append('<div class="row"><div class="btn1 col-12 row"></div><div  class="btn2 col-12 row"></div></div>');
+
+    selectCreator(nomFichier, "", "projet");
     selectCreator(user, "multiple", "utilisateur");
     selectCreator(action, "", "actions");
-    ($('.brick').last()).append('<input class="dateDeb" type="date"/>');
-    ($('.brick').last()).append('<input class="dateFin" type="date"/>');
-    ($('.brick').last()).append("<button type='button' onclick='validerParams(this)' class='btn btn-success envoyerParamsGraph'>Valider les paramètres</button>");
-    ($('.brick').last()).append("<div id='cont"+i+"' class='cont'></div>");
+    ($('.brick').find('div .btn2').last()).append('<div class="col"><input class="dateDeb " type="date"/></div>');
+    ($('.brick').find('div .btn2').last()).append('<div class="col"><input class="dateFin" type="date"/></div>');
+    ($('.brick').find('div .btn2').last()).append("<div class='col'><button type='button' onclick='validerParams(this)' class='btn btn-success envoyerParamsGraph'>Valider les paramètres</button></div>");
+    ($('.brick').last()).append("<div id='cont"+i+"' class='cont col-12'></div>");
     i++;
 
   });
@@ -179,14 +181,16 @@
   });
 
   function validerParams(t){
-    var actions = $(t).parent().find(".actions").find(':selected').text();
+    var actions = $(t).parent().parent().parent().find(".actions").find(':selected').text();
     var utilisateurs = [];
-    $(t).parent().find(".utilisateur :selected").each(function() {
+    $(t).parent().parent().parent().find(".utilisateur :selected").each(function() {
       utilisateurs.push($(this).val());
     });
-    var dateDeb = $(t).parent().find(".dateDeb").val();
-    var dateFin = $(t).parent().find(".dateFin").val();
-    var cont = $(t).parent().find(".cont").attr('id');
+    var dateDeb = $(t).parent().parent().find(".dateDeb").val();
+    var dateFin = $(t).parent().parent().find(".dateFin").val();
+    var cont = $(t).parent().parent().parent().parent().find(".cont").attr('id');
+    alert(actions);
+
     $.ajax({
       type: "POST",
       url: "/validerParams",
@@ -201,7 +205,6 @@
         jour = parseInt(dateDeb.substr(8, 2));
 
         chart = ajouterGraph(cont, date);
-
         for (var i = 0; i<data.length; i++){
           var options = {
             name: utilisateurs[i],
@@ -211,13 +214,7 @@
           }
           chart.addSeries( options, true );
         }
-
-
-
       },
-      error: function (request, status, error) {
-        alert(request.responseText);
-      }
     });
   }
 
@@ -226,22 +223,25 @@
 
 
   function selectCreator(tableau, multiple, type){
+    $('.brick').find('.btn1').append("<div class='col-4'></div>");
+
     var $select = $('<select/>', {
       'class':"selectpicker "+type
     });
     $select.prop("multiple",multiple);
+    $select.attr("data-width", "170px");
 
     for (var idx in tableau) {
       $select.append('<option  value=' + tableau[idx] + '>' + tableau[idx] + '</option>');
     }
 
-    $select.appendTo($('.brick').last()).selectpicker('refresh');
+    $select.appendTo($('.brick').find('.btn1').last().find('div').last()).selectpicker('refresh');
 
   }
 
 
   function ajouterCadre(event){
-    $('.gridly').append("<div class='brick'><div class='row'><div class='col-11'></div><button  class='delete delButton col-1'><i class='fas fa-times'></i></button></div></div>");
+    $('.gridly').append("<div class='brick'><div class='row'><div class='col-11'></div><div class='col-1'><button  class='delete delButton'><i class='fas fa-times'></i></button></div></div></div>");
     $('.gridly').gridly();
     $( ".delete" ).click(function( event ) {
       $(this).closest('.brick').remove();
@@ -332,12 +332,8 @@
       repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), forum: $("#idForum").val(),
       message: $("#idMessage").val(), parent: $("#idParent").val()},
       success: function (data) {
-        alert(data);
         user = data;
       },
-      error: function (request, status, error) {
-        alert(request.responseText);
-      }
     }
     );
   }
