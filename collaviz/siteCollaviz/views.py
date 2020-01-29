@@ -40,8 +40,9 @@ def collaviz(request):
 @csrf_exempt
 def mappingDonnees(request):
     if request.is_ajax() and request.method == 'POST':
-        mapping.mapping(request.POST['fichier'], request.POST['utilisateur'], request.POST['date'], request.POST['heure'], request.POST['titre'], request.POST['attribut'], request.POST['repondre'], request.POST['poster'], request.POST['forum'],
-        request.POST['message'], request.POST['parent'])
+        mapping.mapping(request.POST['fichier'], request.POST['utilisateur'], request.POST['date'], request.POST['heure'], request.POST['titre'], request.POST['attribut'], request.POST['delai'],
+        request.POST['repondre'], request.POST['poster'], request.POST['connexion'],
+        request.POST['forum'], request.POST['message'], request.POST['parent'])
         data = actionParTemps.getUsers()
         return JsonResponse(data, safe=False)
     return render(request, 'siteCollaviz/accueil.html')
