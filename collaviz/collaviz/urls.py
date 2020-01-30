@@ -30,6 +30,8 @@ urlpatterns = [
     path("logout_user", views.logout_user),
     path("login_user", views.login_user),
     path("separateur", views.separateur),
+    path("fichierMapping", views.fichierMapping),
+    path("getUsers", views.getUsers),
 ]
 
 

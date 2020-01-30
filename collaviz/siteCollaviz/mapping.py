@@ -1,7 +1,7 @@
 import pandas as pd
-def mapping(fichier, utilisateur, date, heure, titre, attribut, delai, repondre, poster, connexion, forum, message, parent):
+def mapping(username, fichier, utilisateur, date, heure, titre, attribut, delai, repondre, poster, connexion, forum, message, parent):
     print("date :" + date)
-    data = pd.read_csv('./media/tmp/'+fichier, encoding="utf-8")
+    data = pd.read_csv('./media/' + username + "/" + fichier , encoding="utf-8")
     new_data = data[[utilisateur, date, heure, titre, attribut, delai]]
     columns_dict = {
         utilisateur: "Utilisateur",
@@ -23,4 +23,4 @@ def mapping(fichier, utilisateur, date, heure, titre, attribut, delai, repondre,
     new_data["Attribut"] = new_data["Attribut"].replace(regex=[message], value='IDMSG=')
     new_data["Attribut"] = new_data["Attribut"].replace(regex=[parent], value='IDPARENT=')
     fichier = fichier.replace('.csv','')
-    new_data.to_csv('./media/tmp/'+fichier + "Mapping" + ".csv", encoding='utf-8', index=False)
+    new_data.to_csv('./media/'+ username + "/mapping/" + fichier + "Mapping" + ".csv", encoding='utf-8', index=False)
