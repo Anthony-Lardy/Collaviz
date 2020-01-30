@@ -1,7 +1,6 @@
 import pandas as pd
 
 def actionParTemps(Utilisateurs, Action, Date1, Date2):
-    print(Utilisateurs, Action, Date1, Date2)
     dataFrame = pd.read_csv("./media/tmp/transitionDuppliCellMapping.csv", encoding='utf-8')
     List=[]
     list_nbAction=[]
@@ -29,7 +28,6 @@ def actionParTemps(Utilisateurs, Action, Date1, Date2):
     for i in List:
         for j in range(len(i)):
             i[j] = int(i[j])
-    print(List)
     return List
 
 

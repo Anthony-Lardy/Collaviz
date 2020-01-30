@@ -17,18 +17,19 @@ from siteCollaviz.forms import SignUpForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
+import os
 
 @csrf_exempt
 def collaviz(request):
+    print(request.user.username)
     if request.method == 'POST' and 'fichier' in request.FILES:
-        folder='media/tmp/'
+        folder= 'media/' + request.user.username + "/"
         myfile = request.FILES['fichier']
         fs = FileSystemStorage(location=folder)
         filename = fs.save(myfile.name, myfile)
-        classifier.sql_to_csv(filename)
-        donnees ={
-            'donnees': classifier.nbActionsall("./media/tmp/transition.csv", "'Connexion'"),
-            'file': file.findallfile("./media/tmp/")
+        classifier.sql_to_csv(request.user.username, filename)
+        donnees = {
+            'file' : file.findallfile(folder)
         }
         return render(request, 'siteCollaviz/accueil.html', donnees)
     elif request.method == 'POST' and 'username' in request.POST and 'email' in request.POST:
@@ -62,6 +63,17 @@ def validerParams(request):
             return JsonResponse(data, safe=False)
         return render(request, 'siteCollaviz/accueil.html')
 
+
+@csrf_exempt
+def validerParamsComplexes(request):
+        if request.is_ajax() and request.method == 'POST':
+            fichier = "./media/tmp/"+request.POST['fichier']
+            actions = ["Connexion", "Repondre a un message","Poster un nouveau message"]
+            data = actionsParTemps.actionsParTemps(fichier, actions,request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin'])
+            return JsonResponse(data, safe=False)
+        return render(request, 'siteCollaviz/accueil.html')
+
+        
 @csrf_exempt
 def register(request):
     if request.method == 'POST':
@@ -71,10 +83,15 @@ def register(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             email = form.cleaned_data.get('email')
+            folder= 'media/' + username + "/"
+            os.mkdir(folder)
+            folder= 'media/' + username + "/mapping/"
+            os.mkdir(folder)
             user = authenticate(request, username=username, password=raw_password, email=email)
             login(request, user)
             return redirect('siteCollaviz/accueil.html')
         else:
+            messages.error(request, form.errors)
             print(form.errors.as_data())
     else:
         form = SignUpForm()
@@ -94,6 +111,7 @@ def login_user(request):
         else:
             print("Formulaire invalide")
             print(form.errors)
+            messages.error(request, form.errors)
             return render(request, 'siteCollaviz/accueil.html', {'form': form})
     else:
         form = AuthenticationForm()

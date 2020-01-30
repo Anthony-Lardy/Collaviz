@@ -4,7 +4,7 @@ import csv
 import os
 from datetime import datetime
 import unidecode
-folder = "./media/tmp/"
+folder = "./media/"
 def is_create(line):
     return 'CREATE TABLE' in line or False
 
@@ -28,9 +28,9 @@ def get_table_name_insert(line):
     else:
         print(line)
 
-def create_csv_file(filename):
+def create_csv_file(username, filename):
     filename += ".csv"
-    open(folder + filename, 'w')
+    open(folder + username + "/" + filename, 'w')
 
 def set_values_insert(line, file):
     #s = ","
@@ -41,8 +41,8 @@ def set_values_insert(line, file):
 def is_non_zero_file(fpath):
     return os.path.isfile(fpath) and os.path.getsize(fpath) > 0
 
-def sql_to_csv(sqlfile):
-    reader = open(folder + sqlfile, 'r', encoding='utf-8')
+def sql_to_csv(username,sqlfile):
+    reader = open(folder + username + "/" + sqlfile, 'r', encoding='utf-8')
     contenu = reader.read()
     lines = contenu.split("\n")
     insert = False
@@ -52,12 +52,12 @@ def sql_to_csv(sqlfile):
             writer = csv.writer(file)
             writer.writerow(line[1:-1].replace("',",",").replace(" '", ' ').replace("')", ")")[:-1].split(", "))
         if is_create(line):
-            create_csv_file(get_table_name_create(line))
+            create_csv_file(username, get_table_name_create(line))
         if is_insert(line):
             filename = get_table_name_insert(line)
             insert = True
-            if not is_non_zero_file(folder + filename +".csv"):
-                file = open(folder + filename + ".csv", 'a')
+            if not is_non_zero_file(folder + username + "/" + filename +".csv"):
+                file = open(folder + username + "/" + filename +".csv", 'a')
                 set_values_insert(line, file)
         if is_finish(line):
             insert = False
