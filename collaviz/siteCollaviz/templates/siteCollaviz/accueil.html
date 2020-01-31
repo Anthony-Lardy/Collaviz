@@ -182,8 +182,12 @@
       </div>
     </div>
     <div class="row">
-      <h3 class="col">Participation :</h3>
+      <div class="col">
+      <h3>Participation :</h3>
+      <div id="contComplexe3"></div>
+      </div>
       <h3 class="col">Investissement :</h3>
+
     </div>
   </div>
   <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
@@ -194,8 +198,8 @@
   i = 0;
   var user;
   $( document ).ready(function() {
-    ajouterGraph("contComplexe1", "2009-02-12");
     ajouterGraphBar("contComplexe2", "tdelille");
+    ajouterGraphCamembert("contComplexe3");
 
     });
 
@@ -204,6 +208,8 @@
       var utilisateur = $("#userSelect").val();
       var dateDebut = $("#dateDebut").val();
       var dateFin = $("#dateF").val();
+      var cont = "contComplexe1";
+      var actions = ["Connexion", "Répondre à un message","Poster un nouveau message"];
       $.ajax({
         type: "POST",
         url: "/validerParamsComplexes",
@@ -213,7 +219,20 @@
           dateFin: dateFin,
         },
         success: function (data) {
-          alert(data);
+          annee = parseInt(dateDebut.substr(0, 4));
+          mois = parseInt(dateDebut.substr(5, 2))-1;
+          jour = parseInt(dateDebut.substr(8, 2));
+
+          chart = ajouterGraph(cont, dateDebut);
+          for (var i = 0; i<data.length; i++){
+            var options = {
+              name: actions[i],
+              data: data[i],
+              pointStart: Date.UTC(annee, mois, jour),
+              pointInterval: 24 * 3600 * 1000,
+            }
+            chart.addSeries( options, true );
+          }
         },
       });
 
@@ -269,7 +288,7 @@
         mois = parseInt(dateDeb.substr(5, 2))-1;
         jour = parseInt(dateDeb.substr(8, 2));
 
-        chart = ajouterGraph(cont, date);
+        chart = ajouterGraph(cont, dateDeb);
         for (var i = 0; i<data.length; i++){
           var options = {
             name: utilisateurs[i],
@@ -313,7 +332,41 @@
     });
   }
 
-
+  function ajouterGraphCamembert(cont){
+    var chart = Highcharts.chart(cont, {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Browser market shares in January, 2018'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series: [{
+        colorByPoint: true,
+    }]
+});
+return chart;
+  }
 
   function ajouterGraph(container, date){
 
@@ -433,8 +486,8 @@ return chart;
 
   $(function() {
 
-    $("#validerMapping").click( function()
-    {  $("#idMessage").val();
+    $("#validerMapping").click( function(){
+      $("#idMessage").val();
     $.ajax({
       type: "POST",
       url: "/mappingDonnees",
@@ -444,6 +497,7 @@ return chart;
       forum: $("#idForum").val(), message: $("#idMessage").val(), parent: $("#idParent").val()},
       success: function (data) {
         user = data;
+        alert(user);
       },
     }
     );
@@ -453,8 +507,8 @@ return chart;
 
 $(function() {
 
-  $("#validerSeparateur").click( function()
-  { $("#separateurText").val();
+  $("#validerSeparateur").click( function(){
+    $("#separateurText").val();
   $.ajax({
     type: "POST",
     url: "/separateur",
@@ -477,9 +531,7 @@ function afficherTableau() {
     url: "../media/"+username+"/" + $("#selectFile").val(),
     dataType: "text",
     success: function(data) {
-      alert(data);
       data = $.csv.toArrays(data);
-      alert(data);
       generateHtmlTable(data);
     }
   });

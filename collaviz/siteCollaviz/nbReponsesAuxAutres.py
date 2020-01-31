@@ -1,5 +1,4 @@
 import pandas as pd
-dataFrame = pd.read_csv("transitionDuppliCellMapping.csv", encoding='utf-8')
 
 def nbReponsesDePersonne(dataFrame,Utilisateur, Date1, Date2):
     NewList=[]

@@ -5,6 +5,7 @@ from siteCollaviz import classifier
 from siteCollaviz import file
 from siteCollaviz import mapping
 from siteCollaviz import actionParTemps
+from siteCollaviz import actionsParTemps
 from siteCollaviz import cellDupli
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -67,13 +68,13 @@ def validerParams(request):
 @csrf_exempt
 def validerParamsComplexes(request):
         if request.is_ajax() and request.method == 'POST':
-            fichier = "./media/tmp/"+request.POST['fichier']
-            actions = ["Connexion", "Repondre a un message","Poster un nouveau message"]
+            tab = []
+            fichier = 'media/' + request.user.username + "/"+request.POST['fichier']
+            actions = ["Connexion", "Répondre à un message","Poster un nouveau message"]
             data = actionsParTemps.actionsParTemps(fichier, actions,request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin'])
             return JsonResponse(data, safe=False)
         return render(request, 'siteCollaviz/accueil.html')
 
-        
 @csrf_exempt
 def register(request):
     if request.method == 'POST':
