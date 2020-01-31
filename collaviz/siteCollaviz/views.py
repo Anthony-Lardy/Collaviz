@@ -22,37 +22,47 @@ import os
 
 @csrf_exempt
 def collaviz(request):
-    print(request.user.username)
+    folder= 'media/' + request.user.username + "/"
+    donnees = {
+        'file' : file.findallfile(folder),
+        'mapping': file.findallfile(folder + "mapping/")
+    }
     if request.method == 'POST' and 'fichier' in request.FILES:
-        folder= 'media/' + request.user.username + "/"
         myfile = request.FILES['fichier']
         fs = FileSystemStorage(location=folder)
         filename = fs.save(myfile.name, myfile)
         classifier.sql_to_csv(request.user.username, filename)
-        donnees = {
-            'file' : file.findallfile(folder)
-        }
         return render(request, 'siteCollaviz/accueil.html', donnees)
     elif request.method == 'POST' and 'username' in request.POST and 'email' in request.POST:
         register(request)
     elif request.method == 'POST' and 'username' in request.POST and 'password' in request.POST:
         login_user(request)
-    return render(request, 'siteCollaviz/accueil.html')
+    return render(request, 'siteCollaviz/accueil.html', donnees)
+
+@csrf_exempt
+def fichierMapping(request):
+    folder= 'media/' + request.user.username + "/"
+    donnees =  file.findallfile(folder + "mapping/")
+    return JsonResponse(donnees, safe=False)
+
+@csrf_exempt
+def getUsers(request):
+    donnees =  actionParTemps.getUsers(request.user.username, request.POST['file'])
+    return JsonResponse(donnees, safe=False)
 
 @csrf_exempt
 def mappingDonnees(request):
     if request.is_ajax() and request.method == 'POST':
-        mapping.mapping(request.POST['fichier'], request.POST['utilisateur'], request.POST['date'], request.POST['heure'], request.POST['titre'], request.POST['attribut'], request.POST['delai'],
+        mapping.mapping(request.user.username, request.POST['fichier'], request.POST['utilisateur'], request.POST['date'], request.POST['heure'], request.POST['titre'], request.POST['attribut'], request.POST['delai'],
         request.POST['repondre'], request.POST['poster'], request.POST['connexion'],
         request.POST['forum'], request.POST['message'], request.POST['parent'])
-        data = actionParTemps.getUsers()
-        return JsonResponse(data, safe=False)
+        return HttpResponseRedirect(request.path_info)
     return render(request, 'siteCollaviz/accueil.html')
 
 @csrf_exempt
 def separateur(request):
     if request.is_ajax() and request.method == 'POST':
-        cellDupli.duppliCellulelist(request.POST['fichier'], request.POST['colonne'], request.POST['separateur'])
+        cellDupli.duppliCellulelist(request.user.username, request.POST['fichier'], request.POST['colonne'], request.POST['separateur'])
     return HttpResponseRedirect(request.path_info)
 
 @csrf_exempt
@@ -60,7 +70,7 @@ def validerParams(request):
         if request.is_ajax() and request.method == 'POST':
             array_data = request.POST['utilisateurs']
             utilisateurs = json.loads(array_data)
-            data = actionParTemps.actionParTemps(utilisateurs, request.POST.get('actions'), request.POST['dateDeb'], request.POST['dateFin'])
+            data = actionParTemps.actionParTemps(request.user.username, request.POST['file'], utilisateurs, request.POST.get('actions'), request.POST['dateDeb'], request.POST['dateFin'])
             return JsonResponse(data, safe=False)
         return render(request, 'siteCollaviz/accueil.html')
 
@@ -101,10 +111,8 @@ def register(request):
 @csrf_exempt
 def login_user(request):
     if request.method == 'POST':
-        print("Putain je suis rentré")
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            print("Formulaire valide incroyable du cul monsieur Potter")
             username, password = form.cleaned_data['username'], form.cleaned_data['password']
             user = authenticate(username=username, password=password)
             if user is not None and user.is_active:
