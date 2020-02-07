@@ -15,4 +15,5 @@ def actionsParTemps(dataFrame, Actions, Utilisateur, Date1, Date2):
         for i in List:
             for j in range(len(i)):
                 i[j] = int(i[j])
+
     return List

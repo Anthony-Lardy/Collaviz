@@ -6,6 +6,10 @@ from siteCollaviz import file
 from siteCollaviz import mapping
 from siteCollaviz import actionParTemps
 from siteCollaviz import actionsParTemps
+from siteCollaviz import tempsReponseMoyen
+from siteCollaviz import nbReponsesAuxAutres
+from siteCollaviz import nbReponsesDesAutres
+from siteCollaviz import calculIndicateurs
 from siteCollaviz import cellDupli
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -79,10 +83,14 @@ def validerParams(request):
 def validerParamsComplexes(request):
         if request.is_ajax() and request.method == 'POST':
             tab = []
-            fichier = 'media/' + request.user.username + "/"+request.POST['fichier']
+            fichier = 'media/' + request.user.username + "/mapping/"+request.POST['fichier']
             actions = ["Connexion", "Répondre à un message","Poster un nouveau message"]
-            data = actionsParTemps.actionsParTemps(fichier, actions,request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin'])
-            return JsonResponse(data, safe=False)
+            tab.append(actionsParTemps.actionsParTemps(fichier, actions,request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
+            tab.append(tempsReponseMoyen.indicateurTempsMoyen(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
+            tab.append(nbReponsesAuxAutres.nbReponsesDePersonne(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
+            tab.append(nbReponsesDesAutres.nbReponsesParPersonne(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
+            print(tab)
+            return JsonResponse(tab, safe=False)
         return render(request, 'siteCollaviz/accueil.html')
 
 @csrf_exempt

@@ -4,9 +4,9 @@
 {% block content %}
 <input type="hidden" id="user" value="{{user.username}}">
 <div class="text-center">
-  <div class="container">
+  <div class="container" >
     <div class="row justify-content-md-center text-center">
-      <div id="insertionFichier">
+      <div >
         <h1>Collaviz</h1>
         <h3>Déposez le fichier à étudier : </h3>
         <form method="post" enctype="multipart/form-data">
@@ -17,6 +17,13 @@
         <div id="cont"></div>
       </div>
     </div>
+    {% if user.is_authenticated %}
+    <br><br><br><br><br>
+    <br><br><br><br><br>
+    <br><br><br><br><br>
+    <br><br><br><br><br>
+    <br><br><br><br><br>
+
     <!--previsualisation------------>
   </div>
   <div class="container">
@@ -25,14 +32,12 @@
     </div>
   </div>
   <div id="previsualisation">
-    {% if request.method == "POST" %}
     <select class="browser-default custom-select" id="selectFile" onchange="afficherTableau()">
       <option selected disabled value=""></option>
       {% for o in file %}
       <option value="{{o}}">{{o}}</option>
       {% endfor %}
     </select>
-    {%endif %}
     <div id="csv-display"> </div>
   </div>
   <!--Séparateur------------>
@@ -187,17 +192,28 @@
       </div>
     </div>
     <div class="row">
+      <h3>Participation :</h3>
       <div class="col">
-        <h3>Participation :</h3>
         <div id="contComplexe3"></div>
       </div>
+      <div class="col">
+        <div id="contComplexe3-2"></div>
+      </div>
+  </div>
+    <div class="row">
       <h3 class="col">Investissement :</h3>
-
-    </div>
+      <div class="col">
+        <div id="contComplexe4"></div>
+      </div>
+      <div class="col">
+        <div id="contComplexe3-2"></div>
+      </div>
   </div>
   <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 </div>
+{% endif %}
+
 <script type="text/javascript">
 
   i = 0;
@@ -205,7 +221,6 @@
   var user;
   var table = [];
   $( document ).ready(function() {
-    ajouterGraphBar("contComplexe2", "tdelille");
     fichierMapping();
 
   });
@@ -229,17 +244,44 @@
         annee = parseInt(dateDebut.substr(0, 4));
         mois = parseInt(dateDebut.substr(5, 2))-1;
         jour = parseInt(dateDebut.substr(8, 2));
-
-        chart = ajouterGraph(cont, dateDebut);
-        for (var i = 0; i<data.length; i++){
+        //premier graph
+        chart1 = ajouterGraph(cont, dateDebut);
+        for (var i = 0; i<data[0].length; i++){
           var options = {
             name: actions[i],
-            data: data[i],
+            data: data[0][i],
             pointStart: Date.UTC(annee, mois, jour),
             pointInterval: 24 * 3600 * 1000,
           }
-          chart.addSeries( options, true );
+          chart1.addSeries( options, true );
         }
+
+
+        //premier camembert
+        var final = [];
+        for (var j = 0; j<data[2].length; j++){
+          alert(data[2][j]);
+          final.push({
+            name: data[2][j][0],
+            y: data[2][j][1]
+          });
+        }
+        chart2 = ajouterGraphCamembert("contComplexe3", final);
+
+        //deuxieme camembert
+        var final2 = [];
+        for (var j = 0; j<data[3].length; j++){
+          final2.push({
+            name: data[3][j][0],
+            y: data[3][j][1]
+          });
+        }
+
+        chart3 = ajouterGraphCamembert("contComplexe3-2", final2);
+        //graph barres
+        var chart4 = ajouterGraphAraignee("contComplexe4", "tdelille");
+        chart4.series[0].setData([1,2,3,4,5]);
+        chart4.series[1].setData([1,2,3,4,5]);
       },
     });
 
@@ -312,7 +354,7 @@
         }));
         for (var j = 0; j < data.length; j++) {
           $('#userSelect').append($('<option>', {
-            value: j,
+            value: data[j],
             text: data[j]
           }));
           $('#userSelect').selectpicker('refresh');
@@ -400,7 +442,7 @@
       });
     }
 
-    function ajouterGraphCamembert(cont){
+    function ajouterGraphCamembert(cont, tab){
       var chart = Highcharts.chart(cont, {
         chart: {
           plotBackgroundColor: null,
@@ -430,8 +472,11 @@
           }
         },
         series: [{
-          colorByPoint: true,
-        }]
+        name: 'Brands',
+        colorByPoint: true,
+        data: tab
+    }]
+
       });
       return chart;
     }
@@ -537,6 +582,77 @@
       });
 
       return chart;
+    }
+
+    function ajouterGraphAraignee(cont, utilisateur) {
+      var chart = Highcharts.chart(cont, {
+
+        chart: {
+          polar: true,
+          type: 'line'
+        },
+
+        title: {
+          text: "Qualité d'investissement",
+          x: -80
+        },
+
+        pane: {
+          size: '80%'
+        },
+
+        xAxis: {
+          categories: ["Temps d'écriture", 'Temps de lecture', 'Temps de connexion', "Temps avant lecture d'un nouveau post",
+          "Temps avant réponse d'un nouveau post"],
+          tickmarkPlacement: 'on',
+          lineWidth: 0
+        },
+
+        yAxis: {
+          gridLineInterpolation: 'polygon',
+          lineWidth: 0,
+          min: 0
+        },
+
+        tooltip: {
+          shared: true,
+        },
+
+        legend: {
+          align: 'right',
+          verticalAlign: 'middle',
+          layout: 'vertical'
+        },
+
+        series: [{
+          name: utilisateur,
+          pointPlacement: 'on'
+        }, {
+          name: 'Moyenne',
+          pointPlacement: 'on'
+        }],
+
+        responsive: {
+          rules: [{
+            condition: {
+              maxWidth: 500
+            },
+            chartOptions: {
+              legend: {
+                align: 'center',
+                verticalAlign: 'bottom',
+                layout: 'horizontal'
+              },
+              pane: {
+                size: '70%'
+              }
+            }
+          }]
+        }
+
+      });
+      return chart;
+
     }
 
 
@@ -688,7 +804,7 @@
                     $('#table').DataTable();
 
                   }
-                </script>
+                </script></div>
 
 
                 {% endblock %}
