@@ -153,9 +153,9 @@
   <div class="row" >
     <div class="col-1">
       <div id="toolbar" class="icon-bar">
-        <a id="graphCamembert" ><i class="fas fa-chart-pie"></i></a>
+        <a id="camembertSimple" ><i class="fas fa-chart-pie"></i></a>
         <a id="graph" ><i class="fas fa-chart-area"></i></a>
-        <a id="graphBarre"><i class="fas fa-chart-bar"></i></a>
+        <a id="barSimple"><i class="fas fa-chart-bar"></i></a>
       </div>
     </div>
     <div id="gridly" class="gridly col">
@@ -358,6 +358,45 @@
   });
 
 
+  $( "#camembertSimple" ).on( "click", function() {
+    ajouterCadre();
+    var action = ["Répondre à un message","Poster un nouveau message","Connexion"];
+    var nomFichier = [''];
+    nomFichier.push(...table);
+    ($('.brick').last()).append('<div class="row"><div class="btn1 col-12 row"></div><div  class="btn2 col-12 row"></div></div>');
+    selectCreator(nomFichier, "", "projet", i);
+    selectCreator([], "", "utilisateur", i);
+    selectCreator(action, "multiple", "actions", i);
+    ($('.brick').find('div .btn2').last()).append('<div class="col"><input class="dateDeb " type="date"/></div>');
+    ($('.brick').find('div .btn2').last()).append('<div class="col"><input class="dateFin" type="date"/></div>');
+    ($('.brick').find('div .btn2').last()).append("<div class='col'><button type='button' onclick='validerParamsCamembert(this)' class='btn btn-success envoyerParamsGraph'>Valider les paramètres</button></div>");
+    ($('.brick').last()).append("<div id='cont"+i+"' class='cont col-12'></div>");
+    $("#gridly").delegate("#projet"+i, "change", function(event){
+      getUsersSimple($(this).find("option:selected").text(), $(this));
+    });
+    i++;
+  });
+
+  $( "#barSimple" ).on( "click", function() {
+    ajouterCadre();
+    var action = ["Répondre à un message","Poster un nouveau message","Connexion"];
+    var nomFichier = [''];
+    nomFichier.push(...table);
+    ($('.brick').last()).append('<div class="row"><div class="btn1 col-12 row"></div><div  class="btn2 col-12 row"></div></div>');
+    selectCreator(nomFichier, "", "projet", i);
+    selectCreator([], "multiple", "utilisateur", i);
+    selectCreator(action, "", "actions", i);
+    ($('.brick').find('div .btn2').last()).append('<div class="col"><input class="dateDeb " type="date"/></div>');
+    ($('.brick').find('div .btn2').last()).append('<div class="col"><input class="dateFin" type="date"/></div>');
+    ($('.brick').find('div .btn2').last()).append("<div class='col'><button type='button' onclick='validerParamsBarSimple(this)' class='btn btn-success envoyerParamsGraph'>Valider les paramètres</button></div>");
+    ($('.brick').last()).append("<div id='cont"+i+"' class='cont col-12'></div>");
+    $("#gridly").delegate("#projet"+i, "change", function(event){
+      getUsersSimple($(this).find("option:selected").text(), $(this));
+    });
+    i++;
+  });
+
+
   $( "#mappingFichier" ).on( "change", function() {
     getColonnesmapping($("#mappingFichier option:selected" ).text(), );
   });
@@ -405,7 +444,6 @@
     });
 
     var fichier = $(t).parent().parent().parent().find(".projet").find(":selected").text();
-
     var dateDeb = $(t).parent().parent().find(".dateDeb").val();
     var dateFin = $(t).parent().parent().find(".dateFin").val();
     var cont = $(t).parent().parent().parent().parent().find(".cont").attr('id');
@@ -433,6 +471,72 @@
           }
           chart.addSeries( options, true );
         }
+      },
+    });
+  }
+
+  function validerParamsCamembert(t){
+    var utilisateur = $(t).parent().parent().parent().find(".utilisateur").find(':selected').text();
+    var actions = [];
+    $(t).parent().parent().parent().find(".actions :selected").each(function() {
+      actions.push($(this).text());
+    });
+    var fichier = $(t).parent().parent().parent().find(".projet").find(":selected").text();
+    var dateDeb = $(t).parent().parent().find(".dateDeb").val();
+    var dateFin = $(t).parent().parent().find(".dateFin").val();
+    var cont = $(t).parent().parent().parent().parent().find(".cont").attr('id');
+    $.ajax({
+      type: "POST",
+      url: "/validerParamsCamembert",
+      data: {utilisateur: utilisateur,
+        actions: JSON.stringify(actions),
+        dateDeb: dateDeb,
+        dateFin: dateFin,
+        file: fichier,
+      },
+      success: function (data) {
+        alert(data);
+        var final = [];
+        for (var j = 0; j<data.length; j++){
+          final.push({
+            name: actions[j],
+            y: data[j]
+          });
+        }
+        ajouterGraphCamembert(cont, final);
+      },
+    });
+  }
+
+  function validerParamsBarSimple(t){
+    var action = $(t).parent().parent().parent().find(".actions").find(':selected').text();
+    var utilisateurs = [];
+    $(t).parent().parent().parent().find(".utilisateur :selected").each(function() {
+      utilisateurs.push($(this).text());
+    });
+
+    var fichier = $(t).parent().parent().parent().find(".projet").find(":selected").text();
+    var dateDeb = $(t).parent().parent().find(".dateDeb").val();
+    var dateFin = $(t).parent().parent().find(".dateFin").val();
+    var cont = $(t).parent().parent().parent().parent().find(".cont").attr('id');
+    $.ajax({
+      type: "POST",
+      url: "/validerParamsBarSimple",
+      data: {utilisateurs: JSON.stringify(utilisateurs),
+        action: action,
+        dateDeb: dateDeb,
+        dateFin: dateFin,
+        file: fichier,
+      },
+      success: function (data) {
+
+        var tab = [];
+        for (var j = 0; j<data.length; j++){
+          alert(utilisateurs[j]);
+          alert(data[j]);
+          tab.push([utilisateurs[j], data[j]]);
+        }
+        ajouterGraphBar(cont, tab);
       },
     });
   }
