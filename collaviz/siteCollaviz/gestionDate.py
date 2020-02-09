@@ -35,3 +35,14 @@ def gestionDate(dataFrame, Date1, Date2):
         date_generated = [str(start + datetime.timedelta(x)) for x in range(int((end-start).days)+1)]
 
     return date_generated
+
+
+def gestionDateDataframe(dataframe, date1, date2):
+    if date1 == '' and date2 == '':
+        return dataframe
+    if date1 == '':
+        return dataframe[dataframe.Date <= date2]
+    if date2 == '':
+        return dataframe[dataframe.Date >= date1]
+    else:
+        return dataframe[(dataframe.Date >= date1) & (dataframe.Date <= date2)]

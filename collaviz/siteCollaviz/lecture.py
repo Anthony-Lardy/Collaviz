@@ -52,3 +52,17 @@ def tempsMoyenPostLectureall(dataframe, dictPost):
     if (len(utilisateurs)-erreur) == 0:
         return 0
     return totaltemps/(len(utilisateurs)-erreur)
+
+
+def tempsMoyenPostLectureGroupe(dataframe, dictPost, groupe):
+    erreur = 0
+    totaltemps = 0
+    for utilisateur in groupe:
+        tmp = tempsMoyenPostLecture(dataframe, dictPost, utilisateur)
+        totaltemps += tmp
+        if tmp == 0:
+            erreur += 1
+    if (len(groupe)-erreur) == 0:
+        return 0
+    else:
+        return int(totaltemps/((len(groupe)-erreur)))

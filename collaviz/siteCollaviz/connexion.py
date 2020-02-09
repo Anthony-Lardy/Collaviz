@@ -46,4 +46,20 @@ def tempsMoyenConnexionall(dataframe):
         totalTempsConnexion += tmp
         if tmp == 0:
             erreur += 1
-    return totalTempsConnexion/(len(utilisateurs)-erreur)
+    if (len(utilisateurs)-erreur) == 0:
+        return 0
+    else:
+        return int(totalTempsConnexion/((len(utilisateurs)-erreur)))
+
+def tempsMoyenConnexionGroupe(dataframe, groupe):
+    erreur = 0
+    totalTempsConnexion = 0
+    for utilisateur in groupe:
+        tmp = tempsMoyenConnexion(dataframe, utilisateur)
+        totalTempsConnexion += tmp
+        if tmp == 0:
+            erreur += 1
+    if (len(groupe)-erreur) == 0:
+        return 0
+    else:
+        return int(totalTempsConnexion/((len(groupe)-erreur)))

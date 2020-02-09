@@ -19,3 +19,13 @@ def nbReponsesDePersonne(fichier,Utilisateur, Date1, Date2):
         if user!=Utilisateur:
             FinalList.append([user,NewList2.count(user)])
     return FinalList
+
+def nbReponsesDePersonneGroupe(dataframe, utilisateur, groupe, Date1, Date2):
+    tmp = nbReponsesDePersonne(dataframe, utilisateur, Date1, Date2)
+    final = [["Users", 0]]
+    for i in tmp:
+        if i[0] in groupe:
+            final.append(i)
+        else:
+            final[0][1] += i[1]
+    return final

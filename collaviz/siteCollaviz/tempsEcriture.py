@@ -12,8 +12,10 @@ def tempsEcritureReponseMoyenToutLeMonde(dataframe):
         if(val == 0):
             denom -= 1
         secondes += val
-    moyenneDelai = secondes / denom
-    return moyenneDelai
+    if denom == 0:
+        return 0
+    else:
+        return secondes / denom
 
 
 
@@ -31,3 +33,16 @@ def tempsEcritureReponseMoyen(dataframe, utilisateur):
 
     moyenneDelai = secondes /len(delai)
     return moyenneDelai/60
+
+def tempsEcritureReponseMoyenGroupe(dataframe, groupe):
+    secondes = 0
+    denom = len(groupe)
+    for utlisateur in groupe:
+        val = tempsEcritureReponseMoyen(dataframe, utlisateur)
+        if(val == 0):
+            denom -= 1
+        secondes += val
+    if denom == 0:
+        return 0
+    else:
+        return secondes / denom

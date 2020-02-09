@@ -36,6 +36,10 @@ def collaviz(request):
         fs = FileSystemStorage(location=folder)
         filename = fs.save(myfile.name, myfile)
         classifier.sql_to_csv(request.user.username, filename)
+        donnees = {
+            'file' : file.findallfile(folder),
+            'mapping': file.findallfile(folder + "mapping/")
+        }
         return render(request, 'siteCollaviz/accueil.html', donnees)
     elif request.method == 'POST' and 'username' in request.POST and 'email' in request.POST:
         register(request)
@@ -56,18 +60,33 @@ def getUsers(request):
 
 @csrf_exempt
 def mappingDonnees(request):
+    fichierNew = []
+    folder= 'media/' + request.user.username + "/mapping/"
+    fichierOld = file.findallfile(folder)
     if request.is_ajax() and request.method == 'POST':
         mapping.mapping(request.user.username, request.POST['fichier'], request.POST['utilisateur'], request.POST['date'], request.POST['heure'], request.POST['titre'], request.POST['attribut'], request.POST['delai'],
         request.POST['repondre'], request.POST['poster'], request.POST['connexion'],
         request.POST['forum'], request.POST['message'], request.POST['parent'])
-        return HttpResponseRedirect(request.path_info)
+    while fichierOld == fichierNew:
+        fichierNew = file.findallfile(folder)
+    donnees = {
+        'mapping' : file.findallfile(folder),
+    }
     return render(request, 'siteCollaviz/accueil.html')
 
 @csrf_exempt
 def separateur(request):
+    fichierNew = []
+    folder= 'media/' + request.user.username + "/"
+    fichierOld = file.findallfile(folder)
     if request.is_ajax() and request.method == 'POST':
         cellDupli.duppliCellulelist(request.user.username, request.POST['fichier'], request.POST['colonne'], request.POST['separateur'])
-    return HttpResponseRedirect(request.path_info)
+    while fichierOld == fichierNew:
+        fichierNew = file.findallfile(folder)
+    donnees = {
+        'file' : file.findallfile(folder),
+    }
+    return render(request, 'siteCollaviz/accueil.html', donnees)
 
 @csrf_exempt
 def validerParams(request):
@@ -85,6 +104,7 @@ def validerParamsComplexes(request):
             tab = []
             fichier = 'media/' + request.user.username + "/mapping/"+request.POST['fichier']
             actions = ["Connexion", "Répondre à un message","Poster un nouveau message"]
+
             tab.append(actionsParTemps.actionsParTemps(fichier, actions,request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
             tab.append(tempsReponseMoyen.indicateurTempsMoyen(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
             print(tab[1])

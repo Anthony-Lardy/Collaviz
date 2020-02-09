@@ -23,7 +23,10 @@
     <br><br><br><br><br>
     <br><br><br><br><br>
     <br><br><br><br><br>
-
+    <br><br><br><br><br>
+    <br><br><br><br><br>
+    <br><br><br><br><br>
+    <br><br><br><br><br>
     <!--previsualisation------------>
   </div>
   <div class="container">
@@ -201,7 +204,7 @@
       <div class="col">
         <div id="contComplexe3-2"></div>
       </div>
-  </div>
+    </div>
     <div class="row">
       <h3 class="col">Investissement :</h3>
       <div class="col">
@@ -210,539 +213,544 @@
       <div class="col">
         <div id="contComplexe4-2"></div>
       </div>
+    </div>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
   </div>
-  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  {% endif %}
 
-</div>
-{% endif %}
+  <script type="text/javascript">
 
-<script type="text/javascript">
+    i = 0;
+    j=0;
+    var user;
+    var table = [];
+    $( document ).ready(function() {
+      fichierMapping();
 
-  i = 0;
-  j=0;
-  var user;
-  var table = [];
-  $( document ).ready(function() {
-    fichierMapping();
+    });
 
-  });
-
-  $("#validerParamsComplexes").on("click", function(){
-    var fichier = $("#fichierSelec").val();
-    var utilisateur = $("#userSelect").val();
-    var groupeUsers = $("#usersGroupSelect").val();
-    var dateDebut = $("#dateDebut").val();
-    var dateFin = $("#dateF").val();
-    var cont = "contComplexe1";
-    var actions = ["Connexion", "Répondre à un message","Poster un nouveau message"];
-    $.ajax({
-      type: "POST",
-      url: "/validerParamsComplexes",
-      data: {utilisateur: utilisateur,
-        fichier: fichier,
-        dateDebut: dateDebut,
-        dateFin: dateFin,
-        groupeUsers: JSON.stringify(groupeUsers),
-      },
-      success: function (data) {
-        annee = parseInt(dateDebut.substr(0, 4));
-        mois = parseInt(dateDebut.substr(5, 2))-1;
-        jour = parseInt(dateDebut.substr(8, 2));
-        //premier graph
-        chart1 = ajouterGraph(cont, dateDebut);
-        for (var i = 0; i<data[0].length; i++){
-          var options = {
-            name: actions[i],
-            data: data[0][i],
-            pointStart: Date.UTC(annee, mois, jour),
-            pointInterval: 24 * 3600 * 1000,
+    $("#validerParamsComplexes").on("click", function(){
+      var fichier = $("#fichierSelec").val();
+      var utilisateur = $("#userSelect").val();
+      var groupeUsers = $("#usersGroupSelect").val();
+      var dateDebut = $("#dateDebut").val();
+      var dateFin = $("#dateF").val();
+      var cont = "contComplexe1";
+      var actions = ["Connexion", "Répondre à un message","Poster un nouveau message"];
+      $.ajax({
+        type: "POST",
+        url: "/validerParamsComplexes",
+        data: {utilisateur: utilisateur,
+          fichier: fichier,
+          dateDebut: dateDebut,
+          dateFin: dateFin,
+          groupeUsers: JSON.stringify(groupeUsers),
+        },
+        success: function (data) {
+          annee = parseInt(dateDebut.substr(0, 4));
+          mois = parseInt(dateDebut.substr(5, 2))-1;
+          jour = parseInt(dateDebut.substr(8, 2));
+          //premier graph
+          chart1 = ajouterGraph(cont, dateDebut);
+          for (var i = 0; i<data[0].length; i++){
+            var options = {
+              name: actions[i],
+              data: data[0][i],
+              pointStart: Date.UTC(annee, mois, jour),
+              pointInterval: 24 * 3600 * 1000,
+            }
+            chart1.addSeries( options, true );
           }
-          chart1.addSeries( options, true );
-        }
-        tab = [[utilisateur, data[1][0]], ['Moyenne des utilisateurs', data[1][1]]];
-        ajouterGraphBar("contComplexe2", tab);
+          tab = [[utilisateur, data[1][0]], ['Moyenne des utilisateurs', data[1][1]]];
+          ajouterGraphBar("contComplexe2", tab);
 
 
 
-        //premier camembert
-        var final = [];
-        for (var j = 0; j<data[2].length; j++){
-          final.push({
-            name: data[2][j][0],
-            y: data[2][j][1]
-          });
-        }
-        chart2 = ajouterGraphCamembert("contComplexe3", final);
+          //premier camembert
+          var final = [];
+          for (var j = 0; j<data[2].length; j++){
+            final.push({
+              name: data[2][j][0],
+              y: data[2][j][1]
+            });
+          }
+          chart2 = ajouterGraphCamembert("contComplexe3", final);
 
-        //deuxieme camembert
-        var final2 = [];
-        for (var j = 0; j<data[3].length; j++){
-          final2.push({
-            name: data[3][j][0],
-            y: data[3][j][1]
-          });
-        }
-        ajouterGraphCamembert("contComplexe3-2", final2);
+          //deuxieme camembert
+          var final2 = [];
+          for (var j = 0; j<data[3].length; j++){
+            final2.push({
+              name: data[3][j][0],
+              y: data[3][j][1]
+            });
+          }
+          ajouterGraphCamembert("contComplexe3-2", final2);
 
-        //graphe araignee
-        var chart4 = ajouterGraphAraignee("contComplexe4", utilisateur);
-        chart4.series[0].setData(data[4][0]);
-        chart4.series[1].setData(data[4][1]);
+          //graphe araignee
+          var chart4 = ajouterGraphAraignee("contComplexe4", utilisateur);
+          chart4.series[0].setData(data[4][0]);
+          chart4.series[1].setData(data[4][1]);
 
-        var finalBarreMoyennes = [];
-        for (var j = 0; j<data[5].length-1; j++){
+          var finalBarreMoyennes = [];
+          for (var j = 0; j<data[5].length-1; j++){
+            finalBarreMoyennes.push({
+              type: 'column',
+              name: groupeUsers[j],
+              data: data[5][j],
+            });
+          }
           finalBarreMoyennes.push({
-            type: 'column',
-            name: groupeUsers[j],
-            data: data[5][j],
+            type: 'spline',
+            name: 'Moyenne',
+            data: data[5][data[5].length - 1]
           });
-        }
-        finalBarreMoyennes.push({
-          type: 'spline',
-          name: 'Moyenne',
-          data: data[5][data[5].length - 1]
-        });
-        graphBarresMoyenne("contComplexe4-2", finalBarreMoyennes);
-      },
+          graphBarresMoyenne("contComplexe4-2", finalBarreMoyennes);
+        },
+      });
+
     });
 
-  });
-
-  function fichierMapping(){
-    $.ajax({
-      type: "POST",
-      url: "/fichierMapping",
-      success: function (data) {
-        table = data;
-      },
-    });
-  }
-
-  function getUsersSimple(param, eventt){
-    $.ajax({
-      type: "POST",
-      url: "/getUsers",
-      data: {file : param},
-      success: function (data) {
-        eventt.closest('.utilisateur');
-        userSelect = eventt.parent().parent().parent().find(".utilisateur").find("select");
-        userSelect.html("");
-        for(var i =0; i<data.length; i++){
-          userSelect.append($('<option>', {
-            value: data[i],
-            text: data[i]
-          }));
-          userSelect.selectpicker('refresh');
-        }
-      },
-    });
-  }
-
-  $( "#graph" ).on( "click", function() {
-    ajouterCadre();
-    var action = ["Répondre à un message","Poster un nouveau message","Connexion"];
-    var nomFichier = [''];
-    nomFichier.push(...table);
-    ($('.brick').last()).append('<div class="row"><div class="btn1 col-12 row"></div><div  class="btn2 col-12 row"></div></div>');
-    selectCreator(nomFichier, "", "projet", i);
-    selectCreator([], "multiple", "utilisateur", i);
-    selectCreator(action, "", "actions", i);
-    ($('.brick').find('div .btn2').last()).append('<div class="col"><input class="dateDeb " type="date"/></div>');
-    ($('.brick').find('div .btn2').last()).append('<div class="col"><input class="dateFin" type="date"/></div>');
-    ($('.brick').find('div .btn2').last()).append("<div class='col'><button type='button' onclick='validerParams(this)' class='btn btn-success envoyerParamsGraph'>Valider les paramètres</button></div>");
-    ($('.brick').last()).append("<div id='cont"+i+"' class='cont col-12'></div>");
-    $("#gridly").delegate("#projet"+i, "change", function(event){
-      getUsersSimple($(this).find("option:selected").text(), $(this));
-    });
-    i++;
-  });
-
-
-  $( "#mappingFichier" ).on( "change", function() {
-    getColonnesmapping($("#mappingFichier option:selected" ).text(), );
-  });
-
-  function getUsersComplexe(param){
-    $.ajax({
-      type: "POST",
-      url: "/getUsers",
-      data: {file : param},
-      success: function (data) {
-        $('userSelect').html("");
-        $('#userSelect').append($('<option selected>', {
-          value: "",
-          text: ""
-        }));
-        for (var j = 0; j < data.length; j++) {
-          $('#userSelect').append($('<option>', {
-            value: data[j],
-            text: data[j]
-          }));
-          $('#usersGroupSelect').append($('<option>', {
-            value: data[j],
-            text: data[j]
-          }));
-          $('#userSelect').selectpicker('refresh');
-          $('#usersGroupSelect').selectpicker('refresh');
-        }
-      },
-    });
-  }
-
-  $( "#fichierSelec" ).on( "change", function() {
-    getUsersComplexe($("#fichierSelec option:selected" ).text());
-  });
-
-  $( "#separateurFichier" ).on( "change", function() {
-    getColonnesseparateur($("#separateurFichier option:selected" ).text());
-  });
-
-  function validerParams(t){
-    var actions = $(t).parent().parent().parent().find(".actions").find(':selected').text();
-    var utilisateurs = [];
-    $(t).parent().parent().parent().find(".utilisateur :selected").each(function() {
-      utilisateurs.push($(this).val());
-    });
-
-    var fichier = $(t).parent().parent().parent().find(".projet").find(":selected").text();
-
-    var dateDeb = $(t).parent().parent().find(".dateDeb").val();
-    var dateFin = $(t).parent().parent().find(".dateFin").val();
-    var cont = $(t).parent().parent().parent().parent().find(".cont").attr('id');
-    $.ajax({
-      type: "POST",
-      url: "/validerParams",
-      data: {utilisateurs: JSON.stringify(utilisateurs),
-        actions: actions,
-        dateDeb: dateDeb,
-        dateFin: dateFin,
-        file: fichier,
-      },
-      success: function (data) {
-        annee = parseInt(dateDeb.substr(0, 4));
-        mois = parseInt(dateDeb.substr(5, 2))-1;
-        jour = parseInt(dateDeb.substr(8, 2));
-
-        chart = ajouterGraph(cont, dateDeb);
-        for (var i = 0; i<data.length; i++){
-          var options = {
-            name: utilisateurs[i],
-            data: data[i],
-            pointStart: Date.UTC(annee, mois, jour),
-            pointInterval: 24 * 3600 * 1000,
-          }
-          chart.addSeries( options, true );
-        }
-      },
-    });
-  }
-
-  function selectCreator(tableau, multiple, type, i){
-    $('.brick').find('.btn1').append("<div class='col-4'></div>");
-
-    var $select = $('<select/>', {
-      'class':"selectpicker "+type
-    });
-    $select.prop("multiple",multiple);
-    $select.attr("data-width", "170px");
-    $select.attr("id", type+i);
-
-
-    for (var idx in tableau) {
-      if(idx == ''){
-        $select.append('<option selected disabled value=' + tableau[idx] + '>' + tableau[idx] + '</option>');
-      }else{
-        $select.append('<option value=' + tableau[idx] + '>' + tableau[idx] + '</option>');
-      }      }
-
-      $select.appendTo($('.brick').find('.btn1').last().find('div').last()).selectpicker('refresh');
-
-    }
-
-
-    function ajouterCadre(event){
-      $('.gridly').append("<div class='brick'><div class='row'><div class='col-11'></div><div class='col-1'><button  class='delete delButton'><i class='fas fa-times'></i></button></div></div></div>");
-      $('.gridly').gridly();
-      $( ".delete" ).click(function( event ) {
-        $(this).closest('.brick').remove();
+    function fichierMapping(){
+      $.ajax({
+        type: "POST",
+        url: "/fichierMapping",
+        success: function (data) {
+          table = data;
+        },
       });
     }
 
-    function ajouterGraphCamembert(cont, tab){
-      var chart = Highcharts.chart(cont, {
-        chart: {
-          plotBackgroundColor: null,
-          plotBorderWidth: null,
-          plotShadow: false,
-          type: 'pie'
-        },
-        title: {
-          text: 'Browser market shares in January, 2018'
-        },
-        tooltip: {
-          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        accessibility: {
-          point: {
-            valueSuffix: '%'
+    function getUsersSimple(param, eventt){
+      $.ajax({
+        type: "POST",
+        url: "/getUsers",
+        data: {file : param},
+        success: function (data) {
+          eventt.closest('.utilisateur');
+          userSelect = eventt.parent().parent().parent().find(".utilisateur").find("select");
+          userSelect.html("");
+          for(var i =0; i<data.length; i++){
+            userSelect.append($('<option>', {
+              value: data[i],
+              text: data[i]
+            }));
+            userSelect.selectpicker('refresh');
           }
         },
-        plotOptions: {
-          pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
+      });
+    }
+
+    $( "#graph" ).on( "click", function() {
+      ajouterCadre();
+      var action = ["Répondre à un message","Poster un nouveau message","Connexion"];
+      var nomFichier = [''];
+      nomFichier.push(...table);
+      ($('.brick').last()).append('<div class="row"><div class="btn1 col-12 row"></div><div  class="btn2 col-12 row"></div></div>');
+      selectCreator(nomFichier, "", "projet", i);
+      selectCreator([], "multiple", "utilisateur", i);
+      selectCreator(action, "", "actions", i);
+      ($('.brick').find('div .btn2').last()).append('<div class="col"><input class="dateDeb " type="date"/></div>');
+      ($('.brick').find('div .btn2').last()).append('<div class="col"><input class="dateFin" type="date"/></div>');
+      ($('.brick').find('div .btn2').last()).append("<div class='col'><button type='button' onclick='validerParams(this)' class='btn btn-success envoyerParamsGraph'>Valider les paramètres</button></div>");
+      ($('.brick').last()).append("<div id='cont"+i+"' class='cont col-12'></div>");
+      $("#gridly").delegate("#projet"+i, "change", function(event){
+        getUsersSimple($(this).find("option:selected").text(), $(this));
+      });
+      i++;
+    });
+
+
+    $( "#mappingFichier" ).on( "change", function() {
+      getColonnesmapping($("#mappingFichier option:selected" ).text(), );
+    });
+
+    function getUsersComplexe(param){
+      $.ajax({
+        type: "POST",
+        url: "/getUsers",
+        data: {file : param},
+        success: function (data) {
+          $('userSelect').html("");
+          $('#userSelect').append($('<option selected>', {
+            value: "",
+            text: ""
+          }));
+          for (var j = 0; j < data.length; j++) {
+            $('#userSelect').append($('<option>', {
+              value: data[j],
+              text: data[j]
+            }));
+            $('#usersGroupSelect').append($('<option>', {
+              value: data[j],
+              text: data[j]
+            }));
+            $('#userSelect').selectpicker('refresh');
+            $('#usersGroupSelect').selectpicker('refresh');
+          }
+        },
+      });
+    }
+
+    $( "#fichierSelec" ).on( "change", function() {
+      getUsersComplexe($("#fichierSelec option:selected" ).text());
+    });
+
+    $( "#separateurFichier" ).on( "change", function() {
+      getColonnesseparateur($("#separateurFichier option:selected" ).text());
+    });
+
+    function validerParams(t){
+      var actions = $(t).parent().parent().parent().find(".actions").find(':selected').text();
+      var utilisateurs = [];
+      $(t).parent().parent().parent().find(".utilisateur :selected").each(function() {
+        utilisateurs.push($(this).val());
+      });
+
+      var fichier = $(t).parent().parent().parent().find(".projet").find(":selected").text();
+
+      var dateDeb = $(t).parent().parent().find(".dateDeb").val();
+      var dateFin = $(t).parent().parent().find(".dateFin").val();
+      var cont = $(t).parent().parent().parent().parent().find(".cont").attr('id');
+      $.ajax({
+        type: "POST",
+        url: "/validerParams",
+        data: {utilisateurs: JSON.stringify(utilisateurs),
+          actions: actions,
+          dateDeb: dateDeb,
+          dateFin: dateFin,
+          file: fichier,
+        },
+        success: function (data) {
+          annee = parseInt(dateDeb.substr(0, 4));
+          mois = parseInt(dateDeb.substr(5, 2))-1;
+          jour = parseInt(dateDeb.substr(8, 2));
+
+          chart = ajouterGraph(cont, dateDeb);
+          for (var i = 0; i<data.length; i++){
+            var options = {
+              name: utilisateurs[i],
+              data: data[i],
+              pointStart: Date.UTC(annee, mois, jour),
+              pointInterval: 24 * 3600 * 1000,
+            }
+            chart.addSeries( options, true );
+          }
+        },
+      });
+    }
+
+    function selectCreator(tableau, multiple, type, i){
+      $('.brick').find('.btn1').append("<div class='col-4'></div>");
+
+      var $select = $('<select/>', {
+        'class':"selectpicker "+type
+      });
+      $select.prop("multiple",multiple);
+      $select.attr("data-width", "170px");
+      $select.attr("id", type+i);
+
+
+      for (var idx in tableau) {
+        if(idx == ''){
+          $select.append('<option selected disabled value=' + tableau[idx] + '>' + tableau[idx] + '</option>');
+        }else{
+          $select.append('<option value=' + tableau[idx] + '>' + tableau[idx] + '</option>');
+        }      }
+
+        $select.appendTo($('.brick').find('.btn1').last().find('div').last()).selectpicker('refresh');
+
+      }
+
+
+      function ajouterCadre(event){
+        $('.gridly').append("<div class='brick'><div class='row'><div class='col-11'></div><div class='col-1'><button  class='delete delButton'><i class='fas fa-times'></i></button></div></div></div>");
+        $('.gridly').gridly();
+        $( ".delete" ).click(function( event ) {
+          $(this).closest('.brick').remove();
+        });
+      }
+
+      function ajouterGraphCamembert(cont, tab){
+        var chart = Highcharts.chart(cont, {
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+          },
+          title: {
+            text: 'Browser market shares in January, 2018'
+          },
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          accessibility: {
+            point: {
+              valueSuffix: '%'
+            }
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+              }
+            }
+          },
+          series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: tab
+          }]
+
+        });
+        return chart;
+      }
+
+      function ajouterGraph(container, date){
+
+        var chart = Highcharts.chart(container, {
+
+          title: {
+            text: 'Graphe'
+          },
+
+          subtitle: {
+            text: "Graphe du nombre d'action dans le temps"
+          },
+
+          yAxis: {
+            title: {
+              text: 'nombre de fois'
+            }
+          },
+
+
+          legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+          },
+          xAxis: {
+            type: 'datetime'
+          },
+
+          plotOptions: {
+            series: {
+              label: {
+                connectorAllowed: false
+              },
+              pointStart: date,
+              pointInterval: 24 * 3600 * 1000
+            }
+          },
+
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 500
+              },
+              chartOptions: {
+                legend: {
+                  layout: 'horizontal',
+                  align: 'center',
+                  verticalAlign: 'bottom'
+                }
+              }
+            }]
+          }
+
+        });
+        return chart;
+      }
+
+      function ajouterGraphBar(container, tab){
+        var chart = Highcharts.chart(container, {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: "Temps moyen de réponses d'un utilisateur comparé à la moyenne des utilisateurs"
+          },
+          xAxis: {
+            type: 'category',
+            labels: {
+              style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+              }
+            }
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: 'Temps moyen de réponse (en minutes)'
+            }
+          },
+          series: [{
+            name: "Utilisateurs",
+            data: tab,
             dataLabels: {
               enabled: true,
-              format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-            }
-          }
-        },
-        series: [{
-        name: 'Brands',
-        colorByPoint: true,
-        data: tab
-    }]
-
-      });
-      return chart;
-    }
-
-    function ajouterGraph(container, date){
-
-      var chart = Highcharts.chart(container, {
-
-        title: {
-          text: 'Graphe'
-        },
-
-        subtitle: {
-          text: "Graphe du nombre d'action dans le temps"
-        },
-
-        yAxis: {
-          title: {
-            text: 'nombre de fois'
-          }
-        },
-
-
-        legend: {
-          layout: 'vertical',
-          align: 'right',
-          verticalAlign: 'middle'
-        },
-        xAxis: {
-          type: 'datetime'
-        },
-
-        plotOptions: {
-          series: {
-            label: {
-              connectorAllowed: false
-            },
-            pointStart: date,
-            pointInterval: 24 * 3600 * 1000
-          }
-        },
-
-        responsive: {
-          rules: [{
-            condition: {
-              maxWidth: 500
-            },
-            chartOptions: {
-              legend: {
-                layout: 'horizontal',
-                align: 'center',
-                verticalAlign: 'bottom'
+              rotation: -90,
+              color: '#FFFFFF',
+              align: 'right',
+              y: 20, // 10 pixels down from the top
+              style: {
+                fontSize: '18px',
+                fontFamily: 'Verdana, sans-serif'
               }
             }
           }]
-        }
+        });
 
-      });
-      return chart;
-    }
+        return chart;
+      }
 
-    function ajouterGraphBar(container, tab){
-      var chart = Highcharts.chart(container, {
-        chart: {
-          type: 'column'
-        },
-        title: {
-          text: "Temps moyen de réponses d'un utilisateur comparé à la moyenne des utilisateurs"
-        },
-        xAxis: {
-          type: 'category',
-          labels: {
-            style: {
-              fontSize: '13px',
-              fontFamily: 'Verdana, sans-serif'
-            }
-          }
-        },
-        yAxis: {
-          min: 0,
-          title: {
-            text: 'Temps moyen de réponse (en minutes)'
-          }
-        },
-        series: [{
-          name: "Utilisateurs",
-          data: tab,
-          dataLabels: {
-            enabled: true,
-            rotation: -90,
-            color: '#FFFFFF',
-            align: 'right',
-            y: 20, // 10 pixels down from the top
-            style: {
-              fontSize: '18px',
-              fontFamily: 'Verdana, sans-serif'
-            }
-          }
-        }]
-      });
+      function ajouterGraphAraignee(cont, utilisateur) {
+        var chart = Highcharts.chart(cont, {
 
-      return chart;
-    }
-
-    function ajouterGraphAraignee(cont, utilisateur) {
-      var chart = Highcharts.chart(cont, {
-
-        chart: {
-          polar: true,
-          type: 'line'
-        },
-
-        title: {
-          text: "Qualité d'investissement",
-          x: -80
-        },
-
-        pane: {
-          size: '80%'
-        },
-
-        xAxis: {
-          categories: ["Temps d'écriture", 'Temps de lecture', 'Temps de connexion', "Temps avant lecture d'un nouveau post",
-          "Temps avant réponse d'un nouveau post"],
-          tickmarkPlacement: 'on',
-          lineWidth: 0
-        },
-
-        yAxis: {
-          gridLineInterpolation: 'polygon',
-          lineWidth: 0,
-          min: 0
-        },
-
-        tooltip: {
-          shared: true,
-        },
-
-        legend: {
-          align: 'right',
-          verticalAlign: 'middle',
-          layout: 'vertical'
-        },
-
-        series: [{
-          name: utilisateur,
-          pointPlacement: 'on'
-        }, {
-          name: 'Moyenne',
-          pointPlacement: 'on'
-        }],
-
-        responsive: {
-          rules: [{
-            condition: {
-              maxWidth: 500
-            },
-            chartOptions: {
-              legend: {
-                align: 'center',
-                verticalAlign: 'bottom',
-                layout: 'horizontal'
-              },
-              pane: {
-                size: '70%'
-              }
-            }
-          }]
-        }
-
-      });
-      return chart;
-
-    }
-
-    function graphBarresMoyenne(cont, data) {
-     Highcharts.chart(cont, {
-      title: {
-        text: "Quantité d'investissement"
-      },
-      xAxis: {
-        categories: ['Répondre à un message', 'Connexion', 'Poster un nouveau message', "Afficher le contenu d'un message"]
-      },
-      labels: {
-        items: [{
-          style: {
-            left: '50px',
-            top: '18px',
-            color: ( // theme
-            Highcharts.defaultOptions.title.style &&
-            Highcharts.defaultOptions.title.style.color
-            ) || 'black'
-          }
-        }]
-      },
-      series: data
-    });
-
-  }
-
-
-    $( ".delete" ).click(function( event ) {
-
-      $(this).closest('.brick').remove();
-    });
-
-    $('.gridly').gridly({
-      base: 100, // px
-      gutter: 20, // px
-      columns: 12
-    });
-
-
-    $(function() {
-
-      $("#validerMapping").click( function(){
-        $("#idMessage").val();
-        $.ajax({
-          type: "POST",
-          url: "/mappingDonnees",
-          data: {fichier: $("#mappingFichier").find('option:selected').text(), utilisateur: $("#utilisateurCol").find('option:selected').text(), heure: $("#heureCol").find('option:selected').text(),
-          date: $("#dateCol").find('option:selected').text(), titre: $("#actionCol").find('option:selected').text(), attribut: $("#attributCol").find('option:selected').text(), delai: $("#delaiCol").find('option:selected').text(),
-          repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), connexion: $("#connexion").val(),
-          forum: $("#idForum").val(), message: $("#idMessage").val(), parent: $("#idParent").val()},
-          success: function (data) {
+          chart: {
+            polar: true,
+            type: 'line'
           },
+
+          title: {
+            text: "Qualité d'investissement",
+            x: -80
+          },
+
+          pane: {
+            size: '80%'
+          },
+
+          xAxis: {
+            categories: ["Temps d'écriture", 'Temps de lecture', 'Temps de connexion', "Temps avant lecture d'un nouveau post",
+            "Temps avant réponse d'un nouveau post"],
+            tickmarkPlacement: 'on',
+            lineWidth: 0
+          },
+
+          yAxis: {
+            gridLineInterpolation: 'polygon',
+            lineWidth: 0,
+            min: 0
+          },
+
+          tooltip: {
+            shared: true,
+          },
+
+          legend: {
+            align: 'right',
+            verticalAlign: 'middle',
+            layout: 'vertical'
+          },
+
+          series: [{
+            name: utilisateur,
+            pointPlacement: 'on'
+          }, {
+            name: 'Moyenne',
+            pointPlacement: 'on'
+          }],
+
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 500
+              },
+              chartOptions: {
+                legend: {
+                  align: 'center',
+                  verticalAlign: 'bottom',
+                  layout: 'horizontal'
+                },
+                pane: {
+                  size: '70%'
+                }
+              }
+            }]
+          }
+
+        });
+        return chart;
+
+      }
+
+      function graphBarresMoyenne(cont, data) {
+        Highcharts.chart(cont, {
+          title: {
+            text: "Quantité d'investissement"
+          },
+          xAxis: {
+            categories: ['Répondre à un message', 'Connexion', 'Poster un nouveau message', "Afficher le contenu d'un message"]
+          },
+          labels: {
+            items: [{
+              style: {
+                left: '50px',
+                top: '18px',
+                color: ( // theme
+                Highcharts.defaultOptions.title.style &&
+                Highcharts.defaultOptions.title.style.color
+                ) || 'black'
+              }
+            }]
+          },
+          series: data
+        });
+
+      }
+
+
+      $( ".delete" ).click(function( event ) {
+
+        $(this).closest('.brick').remove();
+      });
+
+      $('.gridly').gridly({
+        base: 100, // px
+        gutter: 20, // px
+        columns: 12
+      });
+
+
+      $(function() {
+
+        $("#validerMapping").click( function(){
+          $("#idMessage").val();
+          $.ajax({
+            type: "POST",
+            url: "/mappingDonnees",
+            data: {fichier: $("#mappingFichier").find('option:selected').text(), utilisateur: $("#utilisateurCol").find('option:selected').text(), heure: $("#heureCol").find('option:selected').text(),
+            date: $("#dateCol").find('option:selected').text(), titre: $("#actionCol").find('option:selected').text(), attribut: $("#attributCol").find('option:selected').text(), delai: $("#delaiCol").find('option:selected').text(),
+            repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), connexion: $("#connexion").val(),
+            forum: $("#idForum").val(), message: $("#idMessage").val(), parent: $("#idParent").val()},
+            success: function (data) {
+              location.reload();
+            },
+          }
+          );
         }
         );
-      }
-      );
-    });
+      });
 
-    $(function() {
+      $(function() {
 
-      $("#validerSeparateur").click( function(){
-        $("#separateurText").val();
-        $.ajax({
-          type: "POST",
-          url: "/separateur",
-          data: {fichier: $("#separateurFichier").find('option:selected').text(), colonne: $("#separateurCol").find('option:selected').text(), separateur: $("#separateurText").val(),},
+        $("#validerSeparateur").click( function(){
+          $("#separateurText").val();
+          $.ajax({
+            type: "POST",
+            url: "/separateur",
+            data: {fichier: $("#separateurFichier").find('option:selected').text(), colonne: $("#separateurCol").find('option:selected').text(), separateur: $("#separateurText").val(),
+            },
+            success : function(data){
+              location.reload();
+            }
         }
         );
       }
