@@ -49,4 +49,6 @@ def tempsMoyenPostLectureall(dataframe, dictPost):
             erreur += 1
         else:
             totaltemps += tmp
+    if (len(utilisateurs)-erreur) == 0:
+        return 0
     return totaltemps/(len(utilisateurs)-erreur)

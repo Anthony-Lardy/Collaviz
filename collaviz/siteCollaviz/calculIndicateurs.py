@@ -4,6 +4,7 @@ from siteCollaviz import reponse
 from siteCollaviz import lecture
 from siteCollaviz import tempsEcriture
 from siteCollaviz import investissement
+import pandas as pd
 
 def calculsIndicateurs(fichier):
     data = pd.read_csv(fichier, encoding='utf-8')
@@ -19,8 +20,13 @@ def calculsIndicateurs(fichier):
     res = [[tempsMoyenEcrituretdelille,10,tempsMoyenConnexiontdelille,tempsMoyenPostLecturetdelille,tempsMoyenPostReponsetdelille], [tempsMoyenEcritureall,15,tempsMoyenConnexionall,tempsMoyenPostLectureall,tempsMoyenPostReponseall]]
     return res
 
-def calculsNbActions(data):
-    moyenneNBAction = investissement.nbActionsUtilisateurMoy(data, ["Répondre à un message", "Connexion", "Poster un nouveau message", "Afficher le contenu d'un message"], ["tdelille", "mmay", "ddaniaupotter", "gachort"])
-    nbAction = investissement.nbActionsUtilisateur(data, ["Répondre à un message", "Connexion", "Poster un nouveau message", "Afficher le contenu d'un message"], ["tdelille", "mmay", "ddaniaupotter", "gachort"])
-    res = [nbAction[0], nbAction[1], nbAction[2], nbAction[3], moyenneNBAction]
+def calculsNbActions(fichier, users):
+    data = pd.read_csv(fichier, encoding='utf-8')
+    nbAction = investissement.nbActionsUtilisateur(data, ["Répondre à un message", "Connexion", "Poster un nouveau message", "Afficher le contenu d'un message"], users)
+    moyenneNBAction = investissement.nbActionsUtilisateurMoy(data, ["Répondre à un message", "Connexion", "Poster un nouveau message", "Afficher le contenu d'un message"], users)
+    res = []
+    for i in range (len(users)):
+        res.append(nbAction[i])
+    res.append(moyenneNBAction)
+
     return res

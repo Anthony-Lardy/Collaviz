@@ -166,6 +166,7 @@
     <div class="row">
       <label class="col">Choisissez le fichier :</label>
       <label class="col">Choisissez l'utilisateur :</label>
+      <label class="col">Choisissez le groupe d'utilisateurs :</label>
       <label class="col">Choisissez la date de début :</label>
       <label class="col">Choisissez la date de fin :</label>
       <div class="col"></div>
@@ -178,6 +179,7 @@
         {% endfor %}
       </select>
       <select id="userSelect" class="col selectpicker"></select>
+      <select id="usersGroupSelect" multiple class="col selectpicker "></select>
       <input id="dateDebut" class="col" type="date">
       <input id="dateF" class="col" type="date">
       <button type="button" id="validerParamsComplexes" class="btn btn-success col">Valider les paramètres</button>
@@ -206,7 +208,7 @@
         <div id="contComplexe4"></div>
       </div>
       <div class="col">
-        <div id="contComplexe3-2"></div>
+        <div id="contComplexe4-2"></div>
       </div>
   </div>
   <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
@@ -228,6 +230,7 @@
   $("#validerParamsComplexes").on("click", function(){
     var fichier = $("#fichierSelec").val();
     var utilisateur = $("#userSelect").val();
+    var groupeUsers = $("#usersGroupSelect").val();
     var dateDebut = $("#dateDebut").val();
     var dateFin = $("#dateF").val();
     var cont = "contComplexe1";
@@ -239,6 +242,7 @@
         fichier: fichier,
         dateDebut: dateDebut,
         dateFin: dateFin,
+        groupeUsers: JSON.stringify(groupeUsers),
       },
       success: function (data) {
         annee = parseInt(dateDebut.substr(0, 4));
@@ -255,12 +259,14 @@
           }
           chart1.addSeries( options, true );
         }
+        tab = [[utilisateur, data[1][0]], ['Moyenne des utilisateurs', data[1][1]]];
+        ajouterGraphBar("contComplexe2", tab);
+
 
 
         //premier camembert
         var final = [];
         for (var j = 0; j<data[2].length; j++){
-          alert(data[2][j]);
           final.push({
             name: data[2][j][0],
             y: data[2][j][1]
@@ -276,12 +282,27 @@
             y: data[3][j][1]
           });
         }
+        ajouterGraphCamembert("contComplexe3-2", final2);
 
-        chart3 = ajouterGraphCamembert("contComplexe3-2", final2);
-        //graph barres
-        var chart4 = ajouterGraphAraignee("contComplexe4", "tdelille");
-        chart4.series[0].setData([1,2,3,4,5]);
-        chart4.series[1].setData([1,2,3,4,5]);
+        //graphe araignee
+        var chart4 = ajouterGraphAraignee("contComplexe4", utilisateur);
+        chart4.series[0].setData(data[4][0]);
+        chart4.series[1].setData(data[4][1]);
+
+        var finalBarreMoyennes = [];
+        for (var j = 0; j<data[5].length-1; j++){
+          finalBarreMoyennes.push({
+            type: 'column',
+            name: groupeUsers[j],
+            data: data[5][j],
+          });
+        }
+        finalBarreMoyennes.push({
+          type: 'spline',
+          name: 'Moyenne',
+          data: data[5][data[5].length - 1]
+        });
+        graphBarresMoyenne("contComplexe4-2", finalBarreMoyennes);
       },
     });
 
@@ -357,7 +378,12 @@
             value: data[j],
             text: data[j]
           }));
+          $('#usersGroupSelect').append($('<option>', {
+            value: data[j],
+            text: data[j]
+          }));
           $('#userSelect').selectpicker('refresh');
+          $('#usersGroupSelect').selectpicker('refresh');
         }
       },
     });
@@ -538,7 +564,7 @@
       return chart;
     }
 
-    function ajouterGraphBar(container, utilisateur){
+    function ajouterGraphBar(container, tab){
       var chart = Highcharts.chart(container, {
         chart: {
           type: 'column'
@@ -562,11 +588,8 @@
           }
         },
         series: [{
-          name: 'Utilisateurs',
-          data: [
-          [utilisateur, 24],
-          ['Moyenne des utilisateurs', 20],
-          ],
+          name: "Utilisateurs",
+          data: tab,
           dataLabels: {
             enabled: true,
             rotation: -90,
@@ -654,6 +677,31 @@
       return chart;
 
     }
+
+    function graphBarresMoyenne(cont, data) {
+     Highcharts.chart(cont, {
+      title: {
+        text: "Quantité d'investissement"
+      },
+      xAxis: {
+        categories: ['Répondre à un message', 'Connexion', 'Poster un nouveau message', "Afficher le contenu d'un message"]
+      },
+      labels: {
+        items: [{
+          style: {
+            left: '50px',
+            top: '18px',
+            color: ( // theme
+            Highcharts.defaultOptions.title.style &&
+            Highcharts.defaultOptions.title.style.color
+            ) || 'black'
+          }
+        }]
+      },
+      series: data
+    });
+
+  }
 
 
     $( ".delete" ).click(function( event ) {

@@ -24,6 +24,8 @@ def tempsMoyenConnexion(dataframe, utilisateur):
     totalseconde = 0
     for i in range(len(lastDate)):
         lastHeure[i] = datetime.strptime(lastHeure[i], '%H:%M:%S').time()
+        lastDate[i] = datetime.strptime(lastDate[i], '%Y-%m-%d')
+        coDate[i] = datetime.strptime(coDate[i], '%Y-%m-%d')
         datetime_object_last = datetime.combine(lastDate[i], lastHeure[i])
         coHeure[i] = datetime.strptime(coHeure[i], '%H:%M:%S').time()
         datetime_object_co = datetime.combine(coDate[i], coHeure[i])

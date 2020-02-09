@@ -87,9 +87,11 @@ def validerParamsComplexes(request):
             actions = ["Connexion", "Répondre à un message","Poster un nouveau message"]
             tab.append(actionsParTemps.actionsParTemps(fichier, actions,request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
             tab.append(tempsReponseMoyen.indicateurTempsMoyen(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
+            print(tab[1])
             tab.append(nbReponsesAuxAutres.nbReponsesDePersonne(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
             tab.append(nbReponsesDesAutres.nbReponsesParPersonne(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
-            print(tab)
+            tab.append(calculIndicateurs.calculsIndicateurs(fichier))
+            tab.append(calculIndicateurs.calculsNbActions(fichier, json.loads(request.POST['groupeUsers'])))
             return JsonResponse(tab, safe=False)
         return render(request, 'siteCollaviz/accueil.html')
 
