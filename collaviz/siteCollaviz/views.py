@@ -8,6 +8,8 @@ from siteCollaviz import actionParTemps
 from siteCollaviz import actionsParTemps
 from siteCollaviz import tempsReponseMoyen
 from siteCollaviz import nbReponsesAuxAutres
+from siteCollaviz import actionsUser
+from siteCollaviz import actionUsers
 from siteCollaviz import nbReponsesDesAutres
 from siteCollaviz import calculIndicateurs
 from siteCollaviz import cellDupli
@@ -97,6 +99,25 @@ def validerParams(request):
             return JsonResponse(data, safe=False)
         return render(request, 'siteCollaviz/accueil.html')
 
+@csrf_exempt
+def validerParamsBarSimple(request):
+        if request.is_ajax() and request.method == 'POST':
+            array_data = request.POST['utilisateurs']
+            utilisateurs = json.loads(array_data)
+            fichier = 'media/' + request.user.username + "/mapping/"+request.POST['file']
+            data = actionUsers.actionPourUtilisateurs(fichier, request.POST.get('action'), utilisateurs, request.POST['dateDeb'], request.POST['dateFin'])
+            return JsonResponse(data, safe=False)
+        return render(request, 'siteCollaviz/accueil.html')
+
+@csrf_exempt
+def validerParamsCamembert(request):
+        if request.is_ajax() and request.method == 'POST':
+            array_data = request.POST['actions']
+            actions = json.loads(array_data)
+            fichier = 'media/' + request.user.username + "/mapping/"+request.POST['file']
+            data = actionsUser.actionsParUtilisateur(fichier, request.POST['utilisateur'], actions, request.POST['dateDeb'], request.POST['dateFin'])
+            return JsonResponse(data, safe=False)
+        return render(request, 'siteCollaviz/accueil.html')
 
 @csrf_exempt
 def validerParamsComplexes(request):

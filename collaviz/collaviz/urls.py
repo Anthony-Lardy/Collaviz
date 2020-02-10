@@ -25,6 +25,8 @@ urlpatterns = [
     path('collaviz', views.collaviz),
     path('mappingDonnees', views.mappingDonnees),
     path('validerParams', views.validerParams),
+    path('validerParamsCamembert', views.validerParamsCamembert),
+    path('validerParamsBarSimple', views.validerParamsBarSimple),
     path('validerParamsComplexes', views.validerParamsComplexes),
     path('register', views.register),
     path("logout_user", views.logout_user),
