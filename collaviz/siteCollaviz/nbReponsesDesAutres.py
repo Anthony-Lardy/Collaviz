@@ -1,26 +1,22 @@
 import pandas as pd
 from siteCollaviz import gestionDate
 
-def nbReponsesParPersonne(fichier,Utilisateur, Date1, Date2):
-    dataFrame = pd.read_csv(fichier, encoding='utf-8')
-
-    NewList=[]
-    NewList2=[]
-    FinalList=[]
-
-    for elem in dataFrame[dataFrame['Utilisateur']==Utilisateur]['Attribut']:
-        if elem[0:5]=="IDMSG":
-            NewList.append(elem[6:])
-
-    for el in NewList:
-        el="IDPARENT="+el
-        for d in gestionDate.gestionDate(dataFrame, Date1, Date2):
-            for user in dataFrame[(dataFrame['Date'] == d) & (dataFrame['Attribut']==el) & (dataFrame['Action']=='Répondre à un message')]['Utilisateur'].tolist():
-                NewList2.append(user)
-    for user in dict.fromkeys(NewList2):
-        if user!=Utilisateur:
-            FinalList.append([user,NewList2.count(user)])
-    return FinalList
+# Nombre de fois que les autres lui ont répondu
+def nbReponsesParPersonne(dataframe, utilisateur, date1, date2):
+    tmp = dataframe[(dataframe.Utilisateur == utilisateur) & ((dataframe.Action == "Poster un nouveau message") | (dataframe.Action == "Répondre à un message")) & (dataframe.Attribut.str.contains("IDMSG=", case=False))].Attribut.tolist()
+    listIdMsg = []
+    listIdParent= []
+    final = []
+    for i in tmp:
+        listIdMsg.append(i[6:])
+    for i in listIdMsg:
+            listIdParent.append("IDPARENT="+i)
+    dataframeModif = gestionDate.gestionDateDataframe(dataframe, date1, date2)
+    utilisateurRep = dataframeModif[(dataframeModif.Attribut.isin(listIdParent)) & (dataframeModif.Action == "Répondre à un message")].Utilisateur.unique().tolist()
+    for utilisateur in utilisateurRep:
+        nbAction = dataframeModif[(dataframeModif.Attribut.isin(listIdParent)) & (dataframeModif.Action == "Répondre à un message") & (dataframeModif.Utilisateur == utilisateur)].Utilisateur.count()
+        final.append([utilisateur, nbAction])
+    return final
 
 def nbReponsesParPersonneGroupe(dataframe, utilisateur, groupe, Date1, Date2):
     tmp = nbReponsesParPersonne(dataframe, utilisateur, Date1, Date2)

@@ -41,7 +41,7 @@ def tempsMoyenPostReponse(dataframe, dictPost, utilisateur):
     return  ((totalseconde/(len(postDate)-erreur))/60)/60
 
 def tempsMoyenPostReponseall(dataframe, dictPost):
-    utilisateurs = dataMapping[dataMapping.Action == "Répondre à un message"].Utilisateur.unique().tolist()
+    utilisateurs = dataframe[dataframe.Action == "Répondre à un message"].Utilisateur.unique().tolist()
     erreur = 0
     totaltemps = 0
     for utilisateur in utilisateurs:

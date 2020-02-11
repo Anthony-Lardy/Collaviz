@@ -1,24 +1,22 @@
 import pandas as pd
 from siteCollaviz import gestionDate
-def nbReponsesDePersonne(fichier,Utilisateur, Date1, Date2):
-    dataFrame = pd.read_csv(fichier, encoding='utf-8')
-    NewList=[]
-    NewList2=[]
-    FinalList=[]
-    for elem in dataFrame[dataFrame['Utilisateur']==Utilisateur]['Attribut']:
 
-        if elem[0:8]=="IDPARENT":
-            NewList.append(elem[9:])
-
-    for el in NewList:
-        el='IDMSG='+el
-        for d in gestionDate.gestionDate(dataFrame, Date1, Date2):
-            for user in dataFrame[(dataFrame['Date'] == d) & (dataFrame['Attribut']==el) & (dataFrame['Action']=='Répondre à un message')]['Utilisateur'].tolist():
-                NewList2.append(user)
-    for user in dict.fromkeys(NewList2):
-        if user!=Utilisateur:
-            FinalList.append([user,NewList2.count(user)])
-    return FinalList
+#Nombre de fois qu'il réponds aux autres dans l'intervalle de Date1 et Date2
+def nbReponsesAuxAutres(dataframe, utilisateur, date1, date2):
+    listIdMsg = []
+    listIdParent= []
+    final = []
+    dataframeModif = gestionDate.gestionDateDataframe(dataframe, date1, date2)
+    tmp = dataframeModif[(dataframeModif.Utilisateur == utilisateur) & (dataframeModif.Action == "Répondre à un message") & (dataframeModif.Attribut.str.contains("IDPARENT=",case = False))].Attribut.tolist()
+    for i in tmp:
+        listIdParent.append(i[9:])
+    for i in listIdParent:
+        listIdMsg.append("IDMSG="+i)
+    utilisateurPost = dataMapping[(dataMapping.Attribut.isin(listIdMsg)) & ((dataMapping.Action == "Répondre à un message") | (dataMapping.Action == "Poster un nouveau message"))].Utilisateur.unique().tolist()
+    for utilisateur in utilisateurPost:
+        nbAction = dataframe[(dataframe.Attribut.isin(listIdMsg)) & ((dataframe.Action == "Répondre à un message") | (dataframe.Action == "Poster un nouveau message")) & (dataframe.Utilisateur == utilisateur)].Attribut.count()
+        final.append([utilisateur, nbAction])
+    return final
 
 def nbReponsesDePersonneGroupe(dataframe, utilisateur, groupe, Date1, Date2):
     tmp = nbReponsesDePersonne(dataframe, utilisateur, Date1, Date2)
