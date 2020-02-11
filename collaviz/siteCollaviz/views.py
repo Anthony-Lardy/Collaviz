@@ -125,13 +125,18 @@ def validerParamsComplexes(request):
             tab = []
             fichier = 'media/' + request.user.username + "/mapping/"+request.POST['fichier']
             actions = ["Connexion", "Répondre à un message","Poster un nouveau message"]
-
+            print("actionsParTemps")
             tab.append(actionsParTemps.actionsParTemps(fichier, actions,request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
+            print("indicateurTempsMoyen")
             tab.append(tempsReponseMoyen.indicateurTempsMoyen(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
             print(tab[1])
+            print("nbReponsesDePersonne")
             tab.append(nbReponsesAuxAutres.nbReponsesDePersonne(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
+            print("nbReponsesParPersonne")
             tab.append(nbReponsesDesAutres.nbReponsesParPersonne(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
+            print("calculsIndicateurs")
             tab.append(calculIndicateurs.calculsIndicateurs(fichier))
+            print("calculsNbActions")
             tab.append(calculIndicateurs.calculsNbActions(fichier, json.loads(request.POST['groupeUsers'])))
             return JsonResponse(tab, safe=False)
         return render(request, 'siteCollaviz/accueil.html')

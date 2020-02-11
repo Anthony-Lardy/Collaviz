@@ -3,6 +3,7 @@ from siteCollaviz import gestionDate
 
 # Nombre de fois que les autres lui ont répondu
 def nbReponsesParPersonne(dataframe, utilisateur, date1, date2):
+    dataframe = pd.read_csv(dataframe, encoding='utf-8')
     tmp = dataframe[(dataframe.Utilisateur == utilisateur) & ((dataframe.Action == "Poster un nouveau message") | (dataframe.Action == "Répondre à un message")) & (dataframe.Attribut.str.contains("IDMSG=", case=False))].Attribut.tolist()
     listIdMsg = []
     listIdParent= []
@@ -15,7 +16,7 @@ def nbReponsesParPersonne(dataframe, utilisateur, date1, date2):
     utilisateurRep = dataframeModif[(dataframeModif.Attribut.isin(listIdParent)) & (dataframeModif.Action == "Répondre à un message")].Utilisateur.unique().tolist()
     for utilisateur in utilisateurRep:
         nbAction = dataframeModif[(dataframeModif.Attribut.isin(listIdParent)) & (dataframeModif.Action == "Répondre à un message") & (dataframeModif.Utilisateur == utilisateur)].Utilisateur.count()
-        final.append([utilisateur, nbAction])
+        final.append([utilisateur, int(nbAction)])
     return final
 
 def nbReponsesParPersonneGroupe(dataframe, utilisateur, groupe, Date1, Date2):

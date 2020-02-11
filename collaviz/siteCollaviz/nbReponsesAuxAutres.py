@@ -2,7 +2,8 @@ import pandas as pd
 from siteCollaviz import gestionDate
 
 #Nombre de fois qu'il réponds aux autres dans l'intervalle de Date1 et Date2
-def nbReponsesAuxAutres(dataframe, utilisateur, date1, date2):
+def nbReponsesDePersonne(dataframe, utilisateur, date1, date2):
+    dataframe = pd.read_csv(dataframe, encoding='utf-8')
     listIdMsg = []
     listIdParent= []
     final = []
@@ -12,10 +13,10 @@ def nbReponsesAuxAutres(dataframe, utilisateur, date1, date2):
         listIdParent.append(i[9:])
     for i in listIdParent:
         listIdMsg.append("IDMSG="+i)
-    utilisateurPost = dataMapping[(dataMapping.Attribut.isin(listIdMsg)) & ((dataMapping.Action == "Répondre à un message") | (dataMapping.Action == "Poster un nouveau message"))].Utilisateur.unique().tolist()
+    utilisateurPost = dataframe[(dataframe.Attribut.isin(listIdMsg)) & ((dataframe.Action == "Répondre à un message") | (dataframe.Action == "Poster un nouveau message"))].Utilisateur.unique().tolist()
     for utilisateur in utilisateurPost:
         nbAction = dataframe[(dataframe.Attribut.isin(listIdMsg)) & ((dataframe.Action == "Répondre à un message") | (dataframe.Action == "Poster un nouveau message")) & (dataframe.Utilisateur == utilisateur)].Attribut.count()
-        final.append([utilisateur, nbAction])
+        final.append([utilisateur, int(nbAction)])
     return final
 
 def nbReponsesDePersonneGroupe(dataframe, utilisateur, groupe, Date1, Date2):
