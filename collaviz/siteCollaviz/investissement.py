@@ -18,6 +18,9 @@ def nbActionsUtilisateurMoy(dataframe, actions, utilisateurs):
         moy = 0
         for utilisateur in utilisateurs:
             moy += nbActionUtilisateur(dataframe, action, utilisateur)
-        moy = moy / len(utilisateur)
-        final.append(moy)
+        if len(utilisateurs) == 0:
+            final.append(0)
+        else:
+            moy = moy / len(utilisateurs)
+            final.append(moy)
     return final

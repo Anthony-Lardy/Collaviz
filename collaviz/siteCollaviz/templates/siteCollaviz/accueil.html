@@ -262,48 +262,59 @@
           }
           chart1.addSeries( options, true );
         }
-        tab = [[utilisateur, data[1][0]], ['Moyenne des utilisateurs', data[1][1]]];
+
+        for (var i = 0; i<data[1].length; i++){
+          var options = {
+            name: "Moyenne pour: " + actions[i],
+            data: data[1][i],
+            pointStart: Date.UTC(annee, mois, jour),
+            pointInterval: 24 * 3600 * 1000,
+          }
+          chart1.addSeries( options, true );
+        }
+
+        tab = [[utilisateur, data[2][0]], ['Moyenne du groupe', data[2][2]], ['Moyenne des utilisateurs', data[2][1]]];
         ajouterGraphBar("contComplexe2", tab);
 
 
 
         //premier camembert
         var final = [];
-        for (var j = 0; j<data[2].length; j++){
+        for (var j = 0; j<data[3].length; j++){
           final.push({
-            name: data[2][j][0],
-            y: data[2][j][1]
+            name: data[3][j][0],
+            y: data[3][j][1]
           });
         }
         chart2 = ajouterGraphCamembert("contComplexe3", final);
 
         //deuxieme camembert
         var final2 = [];
-        for (var j = 0; j<data[3].length; j++){
+        for (var j = 0; j<data[4].length; j++){
           final2.push({
-            name: data[3][j][0],
-            y: data[3][j][1]
+            name: data[4][j][0],
+            y: data[4][j][1]
           });
         }
         ajouterGraphCamembert("contComplexe3-2", final2);
 
         //graphe araignee
         var chart4 = ajouterGraphAraignee("contComplexe4", utilisateur);
-        chart4.series[0].setData(data[4][0]);
-        chart4.series[1].setData(data[4][1]);
+        chart4.series[0].setData(data[5][0]);
+        chart4.series[1].setData(data[5][1]);
 
         var finalBarreMoyennes = [];
-        for (var j = 0; j<data[5].length-1; j++){
+        for (var j = 0; j<data[6].length-1; j++){
           finalBarreMoyennes.push({
             type: 'column',
             name: groupeUsers[j],
-            data: data[5][j],
+            data: data[6][j],
           });
         }
         finalBarreMoyennes.push({
           type: 'spline',
           name: 'Moyenne',
-          data: data[5][data[5].length - 1]
+          data: data[6][data[6].length - 1]
         });
         graphBarresMoyenne("contComplexe4-2", finalBarreMoyennes);
       },

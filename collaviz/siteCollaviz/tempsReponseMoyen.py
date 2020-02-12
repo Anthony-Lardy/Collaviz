@@ -51,11 +51,12 @@ def tempsDeReponseMoyenall(dataframe, Date1, Date2):
     return tempsAll/((len(dataframe.Utilisateur.unique())-erreur))
 
 def tempsDeReponseMoyenGroupSomme(dataframe, listUtilisateurs, Date1, Date2):
-        return sum(tempsDeReponseMoyen(dataFrame, listUtilisateurs, Date1, Date2))
+        return sum(tempsDeReponseMoyen(dataframe, listUtilisateurs, Date1, Date2))
 
 
-def indicateurTempsMoyen(fichier, utilisateur, Date1, Date2):
+def indicateurTempsMoyen(fichier, utilisateur, listUsers, Date1, Date2):
     dataframe = pd.read_csv(fichier, encoding='utf-8')
     tempsUti = tempsDeReponseMoyen(dataframe, [utilisateur], Date1, Date2)[0]
     tempsAll = tempsDeReponseMoyenall(dataframe, Date1, Date2)
-    return [tempsUti, tempsAll]
+    tempsGroupe = tempsDeReponseMoyenGroupSomme(dataframe, listUsers, Date1, Date2)
+    return [tempsUti, tempsAll, tempsGroupe]

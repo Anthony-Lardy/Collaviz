@@ -2,22 +2,37 @@ from siteCollaviz import postToDict
 from siteCollaviz import connexion
 from siteCollaviz import reponse
 from siteCollaviz import lecture
+from siteCollaviz import tempsLecture
 from siteCollaviz import tempsEcriture
 from siteCollaviz import investissement
 import pandas as pd
 
-def calculsIndicateurs(fichier):
+def calculsIndicateurs(fichier, user, groupe):
     data = pd.read_csv(fichier, encoding='utf-8')
     Dict = postToDict.PostToDict(data)
-    tempsMoyenConnexiontdelille = connexion.tempsMoyenConnexion(data, 'tdelille')
+    tempsMoyenConnexiontdelille = connexion.tempsMoyenConnexion(data, user)
     tempsMoyenConnexionall = connexion.tempsMoyenConnexionall(data)
-    tempsMoyenPostReponsetdelille = reponse.tempsMoyenPostReponse(data, Dict, 'tdelille')
+    tempsMoyenConnexionGroupe = connexion.tempsMoyenConnexionGroupe(data, groupe)
+
+    tempsMoyenLecturetdelille = tempsLecture.tempsLectureReponseMoyen(data, user)
+    tempsMoyenLectureall = tempsLecture.tempsLectureReponseMoyenToutLeMonde(data)
+    tempsMoyenLectureGroupe = tempsLecture.tempsLectureReponseMoyenGroupe(data, groupe)
+
+    tempsMoyenPostReponsetdelille = reponse.tempsMoyenPostReponse(data, Dict, user)
     tempsMoyenPostReponseall = reponse.tempsMoyenPostReponseall(data, Dict)
-    tempsMoyenPostLecturetdelille = lecture.tempsMoyenPostLecture(data, Dict, 'tdelille')
+    tempsMoyenPostReponseGroupe = reponse.tempsMoyenPostReponseGroupe(data, Dict, groupe)
+
+    tempsMoyenPostLecturetdelille = lecture.tempsMoyenPostLecture(data, Dict, user)
     tempsMoyenPostLectureall = lecture.tempsMoyenPostLectureall(data, Dict)
-    tempsMoyenEcrituretdelille = tempsEcriture.tempsEcritureReponseMoyen(data, 'tdelille')
+    tempsMoyenPostLectureGroupe = lecture.tempsMoyenPostLectureGroupe(data, Dict, groupe)
+
+    tempsMoyenEcrituretdelille = tempsEcriture.tempsEcritureReponseMoyen(data, user)
     tempsMoyenEcritureall = tempsEcriture.tempsEcritureReponseMoyenToutLeMonde(data)
-    res = [[tempsMoyenEcrituretdelille,10,tempsMoyenConnexiontdelille,tempsMoyenPostLecturetdelille,tempsMoyenPostReponsetdelille], [tempsMoyenEcritureall,15,tempsMoyenConnexionall,tempsMoyenPostLectureall,tempsMoyenPostReponseall]]
+    tempsMoyenEcritureGroupe = tempsEcriture.tempsEcritureReponseMoyenGroupe(data, groupe)
+
+    res = [[tempsMoyenEcrituretdelille,tempsMoyenLecturetdelille,tempsMoyenConnexiontdelille,tempsMoyenPostLecturetdelille,tempsMoyenPostReponsetdelille],
+     [tempsMoyenEcritureall,tempsMoyenLectureall,tempsMoyenConnexionall,tempsMoyenPostLectureall,tempsMoyenPostReponseall],
+     [tempsMoyenEcritureGroupe,tempsMoyenLectureGroupe,tempsMoyenConnexionGroupe,tempsMoyenPostLectureGroupe,tempsMoyenPostReponseGroupe]]
     return res
 
 def calculsNbActions(fichier, users):

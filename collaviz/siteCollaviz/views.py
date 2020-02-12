@@ -107,7 +107,7 @@ def validerParamsBarSimple(request):
             fichier = 'media/' + request.user.username + "/mapping/"+request.POST['file']
             data = actionUsers.actionPourUtilisateurs(fichier, request.POST.get('action'), utilisateurs, request.POST['dateDeb'], request.POST['dateFin'])
             return JsonResponse(data, safe=False)
-        return render(request, 'siteCollaviz/accueil.html')
+        return 2(request, 'siteCollaviz/accueil.html')
 
 @csrf_exempt
 def validerParamsCamembert(request):
@@ -127,15 +127,16 @@ def validerParamsComplexes(request):
             actions = ["Connexion", "Répondre à un message","Poster un nouveau message"]
             print("actionsParTemps")
             tab.append(actionsParTemps.actionsParTemps(fichier, actions,request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
+            tab.append(actionsParTemps.actionsParTempsAll(fichier, actions, request.POST['dateDebut'], request.POST['dateFin']))
             print("indicateurTempsMoyen")
-            tab.append(tempsReponseMoyen.indicateurTempsMoyen(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
-            print(tab[1])
+            tab.append(tempsReponseMoyen.indicateurTempsMoyen(fichier, request.POST['utilisateur'], json.loads(request.POST['groupeUsers']), request.POST['dateDebut'], request.POST['dateFin']))
+            print(tab[2])
             print("nbReponsesDePersonne")
-            tab.append(nbReponsesAuxAutres.nbReponsesDePersonne(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
+            tab.append(nbReponsesAuxAutres.nbReponsesDePersonneGroupe(fichier, request.POST['utilisateur'], request.POST['groupeUsers'], request.POST['dateDebut'], request.POST['dateFin']))
             print("nbReponsesParPersonne")
-            tab.append(nbReponsesDesAutres.nbReponsesParPersonne(fichier, request.POST['utilisateur'], request.POST['dateDebut'], request.POST['dateFin']))
+            tab.append(nbReponsesDesAutres.nbReponsesParPersonneGroupe(fichier, request.POST['utilisateur'], request.POST['groupeUsers'], request.POST['dateDebut'], request.POST['dateFin']))
             print("calculsIndicateurs")
-            tab.append(calculIndicateurs.calculsIndicateurs(fichier))
+            tab.append(calculIndicateurs.calculsIndicateurs(fichier, request.POST['utilisateur'], request.POST['groupeUsers']))
             print("calculsNbActions")
             tab.append(calculIndicateurs.calculsNbActions(fichier, json.loads(request.POST['groupeUsers'])))
             return JsonResponse(tab, safe=False)
