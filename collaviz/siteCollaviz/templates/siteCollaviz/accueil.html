@@ -8,7 +8,7 @@
     {% if user.is_authenticated %}
 
     <div class="row justify-content-md-center text-center">
-      <div >
+      <div>
         <h1>Collaviz</h1>
         <h3>Déposez le fichier à étudier : </h3>
         <form method="post" enctype="multipart/form-data">
@@ -24,12 +24,12 @@
     <br><br><br><br><br>
     <br><br><br><br><br>
     <br><br><br><br><br>
-
+    <br><br><br><br>
     <!--previsualisation------------>
   </div>
   <div class="container">
     <div class="row justify-content-md-center">
-      <h2>Prévisualisation des données</h2>
+      <h2 id="titreVisu">Prévisualisation des données</h2>
     </div>
   </div>
   <div id="previsualisation">
@@ -44,7 +44,7 @@
   <!--Séparateur------------>
   <div class="container">
     <div class="row justify-content-md-center">
-      <h2>Séparateur</h2>
+      <h2 id="titreSeparateur">Séparateur</h2>
     </div>
   </div>
   <div class="container">
@@ -78,7 +78,7 @@
   <!--Mapping------------>
   <div class="container">
     <div class="row justify-content-md-center">
-      <h2>Mapping</h2>
+      <h2 id="titreMapping">Mapping</h2>
     </div>
   </div>
   <div class="container">
@@ -157,6 +157,7 @@
   <br><br><br><br><br>
   <div class="row" >
     <div class="col-1">
+      <h2 id="titreSimples">Indicateurs simples</h2>
       <div id="toolbar" class="icon-bar">
         <a id="camembertSimple" ><i class="fas fa-chart-pie"></i></a>
         <a id="graph" ><i class="fas fa-chart-area"></i></a>
@@ -167,7 +168,7 @@
     </div>
   </div>
   <div class="container">
-    <h2>Indicateurs complexes</h2>
+    <h2 id="titreComplexes">Indicateurs complexes</h2>
     <div class="row">
       <label class="col">Choisissez le fichier :</label>
       <label class="col">Choisissez l'utilisateur :</label>

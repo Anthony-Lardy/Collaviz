@@ -36,21 +36,27 @@
   <title>Collaviz</title>
 </head>
 <body id="body">
-  <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+  <nav class="navbar navbar-fixed-top navbar-dark bg-dark navbar-expand-lg">
     <a class="navbar-brand" href="#">Collaviz</a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Accueil <span class="sr-only">(current)</span></a>
+          <a class="nav-link" id="accueilNav">Accueil <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Visualisation des données</a>
+          <a class="nav-link" id="visuNav">Visualisation des données</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Indicateurs</a>
+          <a class="nav-link" id="separateurNav">Séparateur</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Indicateurs personnalisés</a>
+          <a class="nav-link" id="mappingNav">Mapping</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="simpleNav">Indicateurs simples</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="complexeNav">indicateurs complexes</a>
         </li>
         {% if user.is_authenticated %}
         <li class="nav-item">
@@ -172,5 +178,31 @@ function signIn(){
       alert(request.responseText);
     }
   });
+}
+$("#accueilNav").click(function() {
+  goTo($("#modalRegisterForm"));
+});
+$("#visuNav").click(function() {
+  goTo($("#titreVisu"));
+});
+$("#separateurNav").click(function() {
+  goTo($("#titreSeparateur"));
+});
+$("#mappingNav").click(function() {
+  goTo($("#titreMapping"));
+});
+$("#simpleNav").click(function() {
+  goTo($("#titreSimples"));
+});
+$("#complexeNav").click(function() {
+  goTo($("#titreComplexes"));
+});
+
+
+
+function goTo(div){
+  $([document.documentElement, document.body]).animate({
+    scrollTop: div.offset().top - 73
+  }, 2000);
 }
 </script>
