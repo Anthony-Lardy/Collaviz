@@ -23,10 +23,7 @@
     <br><br><br><br><br>
     <br><br><br><br><br>
     <br><br><br><br><br>
-    <br><br><br><br><br>
-    <br><br><br><br><br>
-    <br><br><br><br><br>
-    <br><br><br><br><br>
+
     <!--previsualisation------------>
   </div>
   <div class="container">
@@ -269,7 +266,7 @@
 
         for (var i = 0; i<data[1].length; i++){
           var options = {
-            name: "Moyenne pour: " + actions[i],
+            name: "Moyenne " + actions[i],
             data: data[1][i],
             pointStart: Date.UTC(annee, mois, jour),
             pointInterval: 24 * 3600 * 1000,
@@ -513,7 +510,6 @@
         file: fichier,
       },
       success: function (data) {
-        alert(data);
         var final = [];
         for (var j = 0; j<data.length; j++){
           final.push({
@@ -550,8 +546,6 @@
 
         var tab = [];
         for (var j = 0; j<data.length; j++){
-          alert(utilisateurs[j]);
-          alert(data[j]);
           tab.push([utilisateurs[j], data[j]]);
         }
         ajouterGraphBar(cont, tab);

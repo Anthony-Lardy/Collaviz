@@ -35,7 +35,7 @@ def tempsDeReponseMoyen(dataFrame, listUtilisateurs, Date1, Date2):
         if(len(NewList) == 0):
             FinalList.append(0)
         else:
-            FinalList.append((int((sum(NewList)/len(NewList)))))
+            FinalList.append(float(round(((sum(NewList)/(len(NewList)))/60)/60, 1)))
     return FinalList
 
 
@@ -48,10 +48,11 @@ def tempsDeReponseMoyenall(dataframe, Date1, Date2):
             erreur += 1
         else:
             tempsAll += temps
-    return tempsAll/((len(dataframe.Utilisateur.unique())-erreur))
+    return float(round(tempsAll/((len(dataframe.Utilisateur.unique())-erreur)), 1))
+
 
 def tempsDeReponseMoyenGroupSomme(dataframe, listUtilisateurs, Date1, Date2):
-        return sum(tempsDeReponseMoyen(dataframe, listUtilisateurs, Date1, Date2))
+        return (round(sum(tempsDeReponseMoyen(dataframe, listUtilisateurs, Date1, Date2))/len(listUtilisateurs), 1))
 
 
 def indicateurTempsMoyen(fichier, utilisateur, listUsers, Date1, Date2):

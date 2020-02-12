@@ -26,8 +26,10 @@ def tempsMoyenPostLecture(dataframe, dictPost, utilisateur):
         if repDate[i] == 0:
             erreur += 1
         else:
+            postDate[i] = datetime.strptime(postDate[i], '%Y-%m-%d')
             postHeure[i] = datetime.strptime(postHeure[i], '%H:%M:%S').time()
             datetime_object_post = datetime.combine(postDate[i], postHeure[i])
+            repDate[i] = datetime.strptime(repDate[i], '%Y-%m-%d')
             repHeure[i]= datetime.strptime(repHeure[i], '%H:%M:%S').time()
             datetime_object_rep = datetime.combine(repDate[i], repHeure[i])
             if (datetime_object_rep-datetime_object_post).total_seconds() <= 0:

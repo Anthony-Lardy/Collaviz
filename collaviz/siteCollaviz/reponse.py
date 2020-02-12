@@ -46,9 +46,10 @@ def tempsMoyenPostReponseall(dataframe, dictPost):
     totaltemps = 0
     for utilisateur in utilisateurs:
         tmp = tempsMoyenPostReponse(dataframe, dictPost, utilisateur)
-        totaltemps += tmp
         if tmp == 0 or tmp > 100:
             erreur += 1
+        else:
+            totaltemps += tmp
     if (len(utilisateurs)-erreur) == 0:
         return 0
     else:
