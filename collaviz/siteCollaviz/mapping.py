@@ -1,6 +1,5 @@
 import pandas as pd
-def mapping(username, fichier, utilisateur, date, heure, titre, attribut, delai, repondre, poster, connexion, forum, message, parent):
-    print("date :" + date)
+def mapping(username, fichier, utilisateur, date, heure, titre, attribut, delai, repondre, poster, affichermsg, connexion, forum, message, parent):
     data = pd.read_csv('./media/' + username + "/" + fichier , encoding="utf-8")
     new_data = data[[utilisateur, date, heure, titre, attribut, delai]]
     columns_dict = {
@@ -16,6 +15,7 @@ def mapping(username, fichier, utilisateur, date, heure, titre, attribut, delai,
         repondre: "Répondre à un message",
         poster: "Poster un nouveau message",
         connexion: "Connexion",
+        affichermsg: "Afficher le contenu d'un message",
     }
     new_data = new_data.rename(columns=columns_dict)
     new_data["Action"] = new_data["Action"].replace(cell_dict_Action)
