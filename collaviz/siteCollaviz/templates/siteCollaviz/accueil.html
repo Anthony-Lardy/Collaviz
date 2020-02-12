@@ -128,6 +128,10 @@
           <label>"Connexion :"</label>
           <input id="connexion" class="w3-input" type="text">
         </div>
+        <div class="col-4">
+          <label>"Afficher le contenu d'un message :"</label>
+          <input id="lecture" class="w3-input" type="text">
+        </div>
       </div>
       <div id="attribut" class="col-4">
         <h4>Attribut : </h4>
@@ -843,7 +847,7 @@
           url: "/mappingDonnees",
           data: {fichier: $("#mappingFichier").find('option:selected').text(), utilisateur: $("#utilisateurCol").find('option:selected').text(), heure: $("#heureCol").find('option:selected').text(),
           date: $("#dateCol").find('option:selected').text(), titre: $("#actionCol").find('option:selected').text(), attribut: $("#attributCol").find('option:selected').text(), delai: $("#delaiCol").find('option:selected').text(),
-          repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), connexion: $("#connexion").val(),
+          repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), connexion: $("#connexion").val(), lecture: $("#lecture").val(),
           forum: $("#idForum").val(), message: $("#idMessage").val(), parent: $("#idParent").val()},
           success: function (data) {
           },

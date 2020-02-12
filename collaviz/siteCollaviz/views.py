@@ -67,7 +67,7 @@ def mappingDonnees(request):
     fichierOld = file.findallfile(folder)
     if request.is_ajax() and request.method == 'POST':
         mapping.mapping(request.user.username, request.POST['fichier'], request.POST['utilisateur'], request.POST['date'], request.POST['heure'], request.POST['titre'], request.POST['attribut'], request.POST['delai'],
-        request.POST['repondre'], request.POST['poster'], request.POST['connexion'],
+        request.POST['repondre'], request.POST['poster'], request.POST['lecture'], request.POST['connexion'],
         request.POST['forum'], request.POST['message'], request.POST['parent'])
     while fichierOld == fichierNew:
         fichierNew = file.findallfile(folder)
