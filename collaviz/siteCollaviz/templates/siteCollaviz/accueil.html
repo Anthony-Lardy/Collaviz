@@ -6,7 +6,6 @@
 <div class="text-center">
   <div class="container" >
     {% if user.is_authenticated %}
-
     <div class="row justify-content-md-center text-center">
       <div>
         <h1>Collaviz</h1>
@@ -75,6 +74,8 @@
       <button type="button" id="validerSeparateur" class="btn btn-success">Valider le séparateur</button>
     </div>
   </div>
+<br>
+  <div id="etatValiderSeparateur" class="alert"></div>
   <!--Mapping------------>
   <div class="container">
     <div class="row justify-content-md-center">
@@ -148,16 +149,18 @@
           <label>"idParent :"</label>
           <input id="idParent" class="w3-input" type="text">
         </div>
-        <div class="col-3">
+        <div class="col-12">
+          <br><br>
           <button type="button" id="validerMapping" class="btn btn-success">Valider le mapping</button>
         </div>
       </div>
     </div>
   </div>
-  <br><br><br><br><br>
+<br>
+<div id="etatValiderMapping" class="alert"></div>
+  <h2 id="titreSimples">Indicateurs simples</h2>
   <div class="row" >
     <div class="col-1">
-      <h2 id="titreSimples">Indicateurs simples</h2>
       <div id="toolbar" class="icon-bar">
         <a id="camembertSimple" ><i class="fas fa-chart-pie"></i></a>
         <a id="graph" ><i class="fas fa-chart-area"></i></a>
@@ -190,6 +193,7 @@
       <input id="dateF" class="col" type="date">
       <button type="button" id="validerParamsComplexes" class="btn btn-success col">Valider les paramètres</button>
     </div>
+<div id="indicateursComplexesDiv">
     <div class="row">
       <div class="col">
         <h3>Régularité :</h3>
@@ -200,7 +204,9 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-12">
       <h3>Participation :</h3>
+      </div>
       <div class="col">
         <div id="contComplexe3"></div>
       </div>
@@ -209,7 +215,9 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-12">
       <h3 class="col">Investissement :</h3>
+  </div>
       <div class="col">
         <div id="contComplexe4"></div>
       </div>
@@ -217,8 +225,8 @@
         <div id="contComplexe4-2"></div>
       </div>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
+</div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
   </div>
   {% endif %}
 
@@ -229,6 +237,7 @@
     var user;
     var table = [];
     $( document ).ready(function() {
+      $("#indicateursComplexesDiv").hide();
       fichierMapping();
 
     });
@@ -251,6 +260,7 @@
           groupeUsers: JSON.stringify(groupeUsers),
         },
         success: function (data) {
+          $("#indicateursComplexesDiv").show();
           annee = parseInt(dateDebut.substr(0, 4));
           mois = parseInt(dateDebut.substr(5, 2))-1;
           jour = parseInt(dateDebut.substr(8, 2));
@@ -838,6 +848,8 @@
 
         $("#validerMapping").click( function(){
           $("#idMessage").val();
+          $("#etatValiderMapping").addClass("btn-warning");
+          $("#etatValiderMapping").text("Mapping des données en cours...");
           $.ajax({
             type: "POST",
             url: "/mappingDonnees",
@@ -846,7 +858,12 @@
             repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), connexion: $("#connexion").val(), lecture: $("#lecture").val(),
             forum: $("#idForum").val(), message: $("#idMessage").val(), parent: $("#idParent").val()},
             success: function (data) {
-              location.reload();
+              $("#etatValiderMapping").removeClass("btn-warning");
+              window.setTimeout(function(){
+                  location.reload();
+              } ,2000);
+            $("#etatValiderMapping").addClass("btn-success");
+            $("#etatValiderMapping").text("Le mapping a bien été effectué");
             },
           }
           );
@@ -857,6 +874,8 @@
       $(function() {
 
         $("#validerSeparateur").click( function(){
+          $("#etatValiderSeparateur").addClass("btn-warning");
+          $("#etatValiderSeparateur").text("Séparation des données en cours...");
           $("#separateurText").val();
           $.ajax({
             type: "POST",
@@ -864,10 +883,12 @@
             data: {fichier: $("#separateurFichier").find('option:selected').text(), colonne: $("#separateurCol").find('option:selected').text(), separateur: $("#separateurText").val(),
           },
           success: function (data){
-            location.reload();
-          },
-          error: function (data){
-            alert("Erreur")
+            $("#etatValiderSeparateur").removeClass("btn-warning");
+            window.setTimeout(function(){
+                location.reload();
+            } ,2000);
+          $("#etatValiderSeparateur").addClass("btn-success");
+          $("#etatValiderSeparateur").text("La séparation a bien été effectuée");
           },
         }
         );
