@@ -25,6 +25,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 import os
+import time
 
 @csrf_exempt
 def collaviz(request):
@@ -62,8 +63,8 @@ def getUsers(request):
 
 @csrf_exempt
 def mappingDonnees(request):
-    fichierNew = []
     folder= 'media/' + request.user.username + "/mapping/"
+    fichierNew = file.findallfile(folder)
     fichierOld = file.findallfile(folder)
     if request.is_ajax() and request.method == 'POST':
         mapping.mapping(request.user.username, request.POST['fichier'], request.POST['utilisateur'], request.POST['date'], request.POST['heure'], request.POST['titre'], request.POST['attribut'], request.POST['delai'],
@@ -74,16 +75,17 @@ def mappingDonnees(request):
     donnees = {
         'mapping' : file.findallfile(folder),
     }
-    return render(request, 'siteCollaviz/accueil.html')
+    return render(request, 'siteCollaviz/accueil.html', donnees)
 
 @csrf_exempt
 def separateur(request):
-    fichierNew = []
     folder= 'media/' + request.user.username + "/"
+    fichierNew = file.findallfile(folder)
     fichierOld = file.findallfile(folder)
     if request.is_ajax() and request.method == 'POST':
         cellDupli.duppliCellulelist(request.user.username, request.POST['fichier'], request.POST['colonne'], request.POST['separateur'])
     while fichierOld == fichierNew:
+        print(fichierOld, fichierNew)
         fichierNew = file.findallfile(folder)
     donnees = {
         'file' : file.findallfile(folder),
@@ -136,7 +138,7 @@ def validerParamsComplexes(request):
             print("nbReponsesParPersonne")
             tab.append(nbReponsesDesAutres.nbReponsesParPersonneGroupe(fichier, request.POST['utilisateur'], request.POST['groupeUsers'], request.POST['dateDebut'], request.POST['dateFin']))
             print("calculsIndicateurs")
-            tab.append(calculIndicateurs.calculsIndicateurs(fichier, request.POST['utilisateur'], request.POST['groupeUsers']))
+            tab.append(calculIndicateurs.calculsIndicateurs(fichier, request.POST['utilisateur'], request.POST['groupeUsers'], request.POST['dateDebut'], request.POST['dateFin']))
             print("calculsNbActions")
             tab.append(calculIndicateurs.calculsNbActions(fichier, json.loads(request.POST['groupeUsers'])))
             return JsonResponse(tab, safe=False)

@@ -5,10 +5,13 @@ from siteCollaviz import lecture
 from siteCollaviz import tempsLecture
 from siteCollaviz import tempsEcriture
 from siteCollaviz import investissement
+from siteCollaviz import gestionDate
 import pandas as pd
 
-def calculsIndicateurs(fichier, user, groupe):
+
+def calculsIndicateurs(fichier, user, groupe, date1, date2):
     data = pd.read_csv(fichier, encoding='utf-8')
+    data = gestionDate.gestionDateDataframe(data, date1, date2)
     Dict = postToDict.PostToDict(data)
     tempsMoyenConnexiontdelille = connexion.tempsMoyenConnexion(data, user)
     tempsMoyenConnexionall = connexion.tempsMoyenConnexionall(data)
