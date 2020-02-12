@@ -44,10 +44,6 @@ def collaviz(request):
             'mapping': file.findallfile(folder + "mapping/")
         }
         return render(request, 'siteCollaviz/accueil.html', donnees)
-    elif request.method == 'POST' and 'username' in request.POST and 'email' in request.POST:
-        register(request)
-    elif request.method == 'POST' and 'username' in request.POST and 'password' in request.POST:
-        login_user(request)
     return render(request, 'siteCollaviz/accueil.html', donnees)
 
 @csrf_exempt
@@ -150,22 +146,23 @@ def register(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            email = form.cleaned_data.get('email')
+            username = form.cleaned_data['username']
+            raw_password = form.cleaned_data['password1']
+            email = form.cleaned_data['email']
             folder= 'media/' + username + "/"
             os.mkdir(folder)
             folder= 'media/' + username + "/mapping/"
             os.mkdir(folder)
             user = authenticate(request, username=username, password=raw_password, email=email)
             login(request, user)
-            return redirect('siteCollaviz/accueil.html')
+            return JsonResponse(2, safe=False)
         else:
             messages.error(request, form.errors)
             print(form.errors.as_data())
+            return JsonResponse(form.errors.as_json(), safe=False)
     else:
         form = SignUpForm()
-    return render(request, 'siteCollaviz/accueil.html', {'form': form})
+    return JsonResponse(2, safe=False)
 
 @csrf_exempt
 def login_user(request):
@@ -178,15 +175,14 @@ def login_user(request):
                 login(request, user)
         else:
             print("Formulaire invalide")
-            print(form.errors)
-            messages.error(request, form.errors)
-            return render(request, 'siteCollaviz/accueil.html', {'form': form})
+            print(form.errors.as_data())
+            return JsonResponse(form.errors.as_json(), safe=False)
     else:
         form = AuthenticationForm()
-    return render(request, 'siteCollaviz/accueil.html', {'form': form})
+    return JsonResponse(2, safe=False)
 
 
 @csrf_exempt
 def logout_user(request):
     logout(request)
-    return redirect('siteCollaviz/accueil.html')
+    return render(request, 'siteCollaviz/accueil.html')
