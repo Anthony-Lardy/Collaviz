@@ -22,7 +22,7 @@
       </div>
     </div>
   </div>
-    <!--previsualisation------------>
+  <!--previsualisation------------>
   <div id="previsualisationT" class="container">
     <div class="row justify-content-md-center">
       <h2 id="titreVisu">Prévisualisation des données <i  data-trigger="hover"  data-content="Vous pouvez visualiser ci-dessous un fichier .csv qui a été généré depuis vos traces." rel="popover" class="fas fa-info-circle bulle"></i></h2>
@@ -86,14 +86,12 @@
   <div class="container">
     <div id="mapping" class="row">
       <div class="col-12">
-        {% if request.method == "POST" %}
         <select class="browser-default custom-select" id="mappingFichier">
           <option selected disabled value=""></option>
           {% for o in file %}
           <option value="{{o}}">{{o}}</option>
           {% endfor %}
         </select>
-        {%endif %}
       </div>
       <div id="user" class="col-4">
         <h4>Utilisateur <i  data-trigger="hover"  data-content="Selectionnez la colonne contenant tous les utilisateurs." rel="popover" class="fas fa-info-circle bulle"></i></h4>
@@ -1002,14 +1000,14 @@
                   }}
 
                 </script>
-{% else %}
-<div class="bg-text">
-  <h1>COLLAVIZ</h1>
-  <h3>Bienvenue sur le site Collaviz !</h3>
-  <h3>Le site qui permet d'analyser la collaboration à partir de traces.</h3>
-  <h3>Veuillez vous connecter ou vous inscrire pour continuer.</h3>
+                {% else %}
+                <div class="bg-text">
+                  <h1>COLLAVIZ</h1>
+                  <h3>Bienvenue sur le site Collaviz !</h3>
+                  <h3>Le site qui permet d'analyser la collaboration à partir de traces.</h3>
+                  <h3>Veuillez vous connecter ou vous inscrire pour continuer.</h3>
 
-</div>
-{% endif %}
-</div>
-  {% endblock %}
+                </div>
+                {% endif %}
+              </div>
+              {% endblock %}
