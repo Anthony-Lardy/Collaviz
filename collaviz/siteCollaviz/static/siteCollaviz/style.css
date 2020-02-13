@@ -19,7 +19,74 @@ z-index: -1;
   text-align: center;
 }
 
+.bg-text {
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0, 0.4);
+  color: white;
+  font-weight: bold;
+  border: 3px solid #f1f1f1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 80%;
+  padding: 20px;
+  text-align: center;
+}
+.inputfile-box {
+  position: relative;
+}
 
+.inputfile {
+  display: none;
+}
+
+#btnDepotFile{
+  margin-top: 2%;
+}
+
+.container {
+  display: inline-block;
+  width: 100%;
+}
+
+.file-box {
+  display: inline-block;
+  width: 100%;
+  border: 1px solid;
+  padding: 5px 0px 5px 5px;
+  box-sizing: border-box;
+  height: calc(2rem - 2px);
+}
+
+.file-button {
+  background: red;
+  padding: 5px;
+  position: absolute;
+  border: 1px solid;
+  top: 0px;
+  right: 0px;
+}
+#previsualisationT{
+  margin-top: 50%;
+}
+
+#fond {
+  /* The image used */
+
+  /* Add the blur effect */
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 
 
 .icon-bar {
@@ -40,7 +107,9 @@ z-index: -1;
   background-color: #000;
 }
 
-
+#etatValiderSeparateur{
+  margin-top: : 5%;
+}
 
 .brick{
     width: 630px;
