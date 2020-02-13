@@ -1,8 +1,9 @@
 import os
+
 def findallfile(path):
+    f = os.listdir(path)
     files = []
-    for r, d, f in os.walk(path):
-        for file in f:
-            if '.csv' in file:
-                files.append(file)
+    for file in f:
+        if '.csv' in file:
+            files.append(file)
     return files

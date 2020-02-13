@@ -105,7 +105,7 @@ def validerParamsBarSimple(request):
             fichier = 'media/' + request.user.username + "/mapping/"+request.POST['file']
             data = actionUsers.actionPourUtilisateurs(fichier, request.POST.get('action'), utilisateurs, request.POST['dateDeb'], request.POST['dateFin'])
             return JsonResponse(data, safe=False)
-        return 2(request, 'siteCollaviz/accueil.html')
+        return (request, 'siteCollaviz/accueil.html')
 
 @csrf_exempt
 def validerParamsCamembert(request):

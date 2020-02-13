@@ -1,32 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
 <input type="hidden" id="user" value="{{user.username}}">
 <div class="text-center">
+  {% if user.is_authenticated %}
   <div class="container" >
-    {% if user.is_authenticated %}
-    <div class="row justify-content-md-center text-center">
-      <div>
-        <h1>Collaviz</h1>
+    <div  class="container justify-content-md-center text-center">
+      <div class="bg-text">
         <h3>Déposez le fichier à étudier : </h3>
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          <input type="file" name="fichier">
-          <button type="submit">Déposer</button>
+          <div class="container">
+            <div class="row">
+              <div class="col"></div>
+              <div class="col-3"> <input type="file"  name="fichier"></div>
+              <div class="col"></div>
+            </div>
+          </div>
+          <button class="btn btn-success" id="btnDepotFile" type="submit">Déposer</button>
         </form>
-        <div id="cont"></div>
       </div>
     </div>
-    <br><br><br><br><br>
-    <br><br><br><br><br>
-    <br><br><br><br><br>
-    <br><br><br><br><br>
-    <br><br><br><br><br>
-    <br><br><br><br>
-    <!--previsualisation------------>
   </div>
-  <div class="container">
+    <!--previsualisation------------>
+  <div id="previsualisationT" class="container">
     <div class="row justify-content-md-center">
       <h2 id="titreVisu">Prévisualisation des données</h2>
     </div>
@@ -48,13 +45,16 @@
   </div>
   <div class="container">
     <div class="row">
-      <div class="col-8">
+      <div class="col-4">
+        <h4>Choisissez le fichier </h4>
       </div>
       <div class="col-4">
-        <label>"Séparateur :"</label>
+        <h4>Choisissez la colonne </h4>
       </div>
       <div class="col-4">
-        <label></label>
+        <h4>Séparateur </h4>
+      </div>
+      <div class="col-4"><br>
         <select class="browser-default custom-select" id="separateurFichier">
           <option selected disabled value=""></option>
           {% for o in file %}
@@ -62,19 +62,20 @@
           {% endfor %}
         </select>
       </div>
-      <div id="separateur" class="col-4">
-        <label></label>
+      <div id="separateur" class="col-4"><br>
         <select id="separateurCol" class="browser-default custom-select"> </select>
       </div>
       <div id="heure" class="col-4">
         <input id="separateurText" class="w3-input" type="text">
       </div>
-    </div><br><br>
+    </div>
+    <br>
     <div class="row justify-content-md-center">
       <button type="button" id="validerSeparateur" class="btn btn-success">Valider le séparateur</button>
     </div>
   </div>
-<br>
+  <br>
+
   <div id="etatValiderSeparateur" class="alert"></div>
   <!--Mapping------------>
   <div class="container">
@@ -95,58 +96,58 @@
         {%endif %}
       </div>
       <div id="user" class="col-4">
-        <h4>Utilisateur : </h4>
+        <h4>Utilisateur <i  data-trigger="hover"  data-content="Selectionnez la colonne contenant tous les utilisateurs." rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="utilisateurCol" class="browser-default custom-select"> </select>
       </div>
       <div id="date" class="col-4">
-        <h4>Date : </h4>
+        <h4>Date <i  data-trigger="hover"  data-content="Selectionnez la colonne contenant la date à laquelle l'action a été effectuée." rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="dateCol" class="browser-default custom-select"> </select>
       </div>
       <div id="heure" class="col-4">
-        <h4>Heure : </h4>
+        <h4>Heure <i  data-trigger="hover"  data-content="Selectionnez la colonne contenant l'heure à laquelle l'action a été effectuée." rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="heureCol" class="browser-default custom-select"> </select>
       </div><br><br><br><br><br>
       <div id="action" class="col-4">
-        <h4>Action : </h4>
+        <h4>Action <i  data-trigger="hover"  data-content="Selectionnez la colonne contenant toutes les actions (exemples: Répondre à un message, Connexion, etc)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="actionCol" class="browser-default custom-select"></select>
       </div>
       <div id="delai" class="col-4">
-        <h4>Delai : </h4>
+        <h4>Delai <i  data-trigger="hover"  data-content="Selectionnez la colonne contenant le temps passé à effectuer une action (exemples: temps d'écriture d'un message, etc)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="delaiCol" class="browser-default custom-select"></select>
       </div><br><br><br><br>
       <div class="row col-12">
         <div class="col-4">
-          <label>"Répondre à un message : "</label>
+          <h4>Répondre à un message <i  data-trigger="hover"  data-content="Entrez la chaine de caractère correspondant à l'action 'Répondre à un message'" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="repondreMessage" class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"Poster un nouveau message :"</label>
+          <h4>Poster un nouveau message <i  data-trigger="hover"  data-content="Entrez la chaine de caractère correspondant à l'action 'Poster un nouveau message'" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="creerMessage" class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"Connexion :"</label>
+          <h4>Connexion <i  data-trigger="hover"  data-content="Entrez la chaine de caractère correspondant à l'action 'Connexion'" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="connexion" class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"Afficher le contenu d'un message :"</label>
+          <h4>Afficher le contenu d'un message <i  data-trigger="hover"  data-content="Entrez la chaine de caractère correspondant à l'action 'Afficher le contenu d'un message'" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="lecture" class="w3-input" type="text">
         </div>
       </div>
       <div id="attribut" class="col-4">
-        <h4>Attribut : </h4>
+        <h4>Attribut : <i  data-trigger="hover"  data-content="Selectionner la colonne contenant les informations complémentaires pour les messages (exemples: id du forum, id du message, etc)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="attributCol" class="browser-default custom-select"></select>
       </div><br><br><br><br>
       <div class="row col-12">
         <div class="col-4">
-          <label>"idForum : "</label>
+          <h4>idForum <i  data-trigger="hover"  data-content="Entrez la chaine de caractère précedent l'id du forum (exemple: si votre colonne contient IDForum=2 entrez alors IDForum=)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="idForum" class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"idMessage :"</label>
+          <h4>idMessage <i  data-trigger="hover"  data-content="Entrez la chaine de caractère précedent l'id du message (exemple: si votre colonne contient IDMsg=2 entrez alors IDMsg=)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="idMessage"  class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"idParent :"</label>
+          <h4>idParent <i  data-trigger="hover"  data-content="Entrez la chaine de caractère précedent l'id du message auquel il répond (exemple: si votre colonne contient IDParent=2 entrez alors IDParent=)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="idParent" class="w3-input" type="text">
         </div>
         <div class="col-12">
@@ -156,8 +157,8 @@
       </div>
     </div>
   </div>
-<br>
-<div id="etatValiderMapping" class="alert"></div>
+  <br>
+  <div id="etatValiderMapping" class="alert"></div>
   <h2 id="titreSimples">Indicateurs simples</h2>
   <div class="row" >
     <div class="col-1">
@@ -193,42 +194,42 @@
       <input id="dateF" class="col" type="date">
       <button type="button" id="validerParamsComplexes" class="btn btn-success col">Valider les paramètres</button>
     </div>
-<div id="indicateursComplexesDiv">
-    <div class="row">
-      <div class="col">
-        <h3>Régularité :</h3>
-        <div id="contComplexe1"></div>
+    <div id="indicateursComplexesDiv">
+      <div class="row">
+        <div class="col">
+          <h3>Régularité :</h3>
+          <div id="contComplexe1"></div>
+        </div>
+        <div class="col"><h3>Réactivité :</h3>
+          <div id="contComplexe2"></div>
+        </div>
       </div>
-      <div class="col"><h3>Réactivité :</h3>
-        <div id="contComplexe2"></div>
+      <div class="row">
+        <div class="col-12">
+          <h3>Participation :</h3>
+        </div>
+        <div class="col">
+          <div id="contComplexe3"></div>
+        </div>
+        <div class="col">
+          <div id="contComplexe3-2"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h3 class="col">Investissement :</h3>
+        </div>
+        <div class="col">
+          <div id="contComplexe4"></div>
+        </div>
+        <div class="col">
+          <div id="contComplexe4-2"></div>
+        </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12">
-      <h3>Participation :</h3>
-      </div>
-      <div class="col">
-        <div id="contComplexe3"></div>
-      </div>
-      <div class="col">
-        <div id="contComplexe3-2"></div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-      <h3 class="col">Investissement :</h3>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
   </div>
-      <div class="col">
-        <div id="contComplexe4"></div>
-      </div>
-      <div class="col">
-        <div id="contComplexe4-2"></div>
-      </div>
-    </div>
-</div>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-  </div>
-  {% endif %}
+
 
   <script type="text/javascript">
 
@@ -236,9 +237,11 @@
     j=0;
     var user;
     var table = [];
+    $('.bulle').popover();
     $( document ).ready(function() {
       $("#indicateursComplexesDiv").hide();
       fichierMapping();
+
 
     });
 
@@ -265,7 +268,7 @@
           mois = parseInt(dateDebut.substr(5, 2))-1;
           jour = parseInt(dateDebut.substr(8, 2));
           //premier graph
-          chart1 = ajouterGraph(cont, dateDebut);
+          chart1 = ajouterGraph(cont, dateDebut, "La régularité de " + utilisateur + " comparée à la moyenne des utilisateurs actifs" , "Nombre d'action effectué par jour");
           for (var i = 0; i<data[0].length; i++){
             var options = {
               name: actions[i],
@@ -287,7 +290,7 @@
           }
 
           tab = [[utilisateur, data[2][0]], ['Moyenne du groupe', data[2][2]], ['Moyenne des utilisateurs', data[2][1]]];
-          ajouterGraphBar("contComplexe2", tab);
+          ajouterGraphBar("contComplexe2", tab, "Réactivité de "+ utilisateur + " pour répondre à un nouveau message", "Temps de réponse à un nouveau message (heures)");
 
 
 
@@ -299,7 +302,7 @@
               y: data[3][j][1]
             });
           }
-          chart2 = ajouterGraphCamembert("contComplexe3", final);
+          chart2 = ajouterGraphCamembert("contComplexe3", final, "Proportion des personnes ayant répondu à " + utilisateur);
 
           //deuxieme camembert
           var final2 = [];
@@ -309,7 +312,7 @@
               y: data[4][j][1]
             });
           }
-          ajouterGraphCamembert("contComplexe3-2", final2);
+          ajouterGraphCamembert("contComplexe3-2", final2, "Proportion des destinaires des messages de " + utilisateur);
 
           //graphe araignee
           var chart4 = ajouterGraphAraignee("contComplexe4", utilisateur);
@@ -488,7 +491,7 @@
           mois = parseInt(dateDeb.substr(5, 2))-1;
           jour = parseInt(dateDeb.substr(8, 2));
 
-          chart = ajouterGraph(cont, dateDeb);
+          chart = ajouterGraph(cont, dateDeb, "Nombre de fois que le(s) utilisateur(s) selectionné(s) ont fait l'action : " + actions , "Nombre d'action effectué par jour");
           for (var i = 0; i<data.length; i++){
             var options = {
               name: utilisateurs[i],
@@ -529,7 +532,7 @@
               y: data[j]
             });
           }
-          ajouterGraphCamembert(cont, final);
+          ajouterGraphCamembert(cont, final, "Proportion des actions : " + actions + " pour " + utilisateur);
         },
       });
     }
@@ -560,7 +563,7 @@
           for (var j = 0; j<data.length; j++){
             tab.push([utilisateurs[j], data[j]]);
           }
-          ajouterGraphBar(cont, tab);
+          ajouterGraphBar(cont, tab, "Nombre de fois que " + utilisateurs + " ont fait l'action : " + action, "Nombre d'action");
         },
       });
     }
@@ -581,314 +584,292 @@
           $select.append('<option selected disabled value=' + tableau[idx] + '>' + tableau[idx] + '</option>');
         }else{
           $select.append('<option value=' + tableau[idx] + '>' + tableau[idx] + '</option>');
-        }      }
-
-        $select.appendTo($('.brick').find('.btn1').last().find('div').last()).selectpicker('refresh');
-
+        }
       }
 
+      $select.appendTo($('.brick').find('.btn1').last().find('div').last()).selectpicker('refresh');
 
-      function ajouterCadre(event){
-        $('.gridly').append("<div class='brick'><div class='row'><div class='col-11'></div><div class='col-1'><button  class='delete delButton'><i class='fas fa-times'></i></button></div></div></div>");
-        $('.gridly').gridly();
-        $( ".delete" ).click(function( event ) {
-          $(this).closest('.brick').remove();
-        });
-      }
-
-      function ajouterGraphCamembert(cont, tab){
-        var chart = Highcharts.chart(cont, {
-          chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-          },
-          title: {
-            text: 'Browser market shares in January, 2018'
-          },
-          tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-          },
-          accessibility: {
-            point: {
-              valueSuffix: '%'
-            }
-          },
-          plotOptions: {
-            pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-              }
-            }
-          },
-          series: [{
-            name: 'Brands',
-            colorByPoint: true,
-            data: tab
-          }]
-
-        });
-        return chart;
-      }
-
-      function ajouterGraph(container, date){
-
-        var chart = Highcharts.chart(container, {
-
-          title: {
-            text: 'Graphe'
-          },
-
-          subtitle: {
-            text: "Graphe du nombre d'action dans le temps"
-          },
-
-          yAxis: {
-            title: {
-              text: 'nombre de fois'
-            }
-          },
+    }
 
 
-          legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle'
-          },
-          xAxis: {
-            type: 'datetime'
-          },
-
-          plotOptions: {
-            series: {
-              label: {
-                connectorAllowed: false
-              },
-              pointStart: date,
-              pointInterval: 24 * 3600 * 1000
-            }
-          },
-
-          responsive: {
-            rules: [{
-              condition: {
-                maxWidth: 500
-              },
-              chartOptions: {
-                legend: {
-                  layout: 'horizontal',
-                  align: 'center',
-                  verticalAlign: 'bottom'
-                }
-              }
-            }]
-          }
-
-        });
-        return chart;
-      }
-
-      function ajouterGraphBar(container, tab){
-        var chart = Highcharts.chart(container, {
-          chart: {
-            type: 'column'
-          },
-          title: {
-            text: "Temps moyen de réponses d'un utilisateur comparé à la moyenne des utilisateurs"
-          },
-          xAxis: {
-            type: 'category',
-            labels: {
-              style: {
-                fontSize: '13px',
-                fontFamily: 'Verdana, sans-serif'
-              }
-            }
-          },
-          yAxis: {
-            min: 0,
-            title: {
-              text: 'Temps moyen de réponse (en minutes)'
-            }
-          },
-          series: [{
-            name: "Utilisateurs",
-            data: tab,
-            dataLabels: {
-              enabled: true,
-              rotation: -90,
-              color: '#FFFFFF',
-              align: 'right',
-              y: 20, // 10 pixels down from the top
-              style: {
-                fontSize: '18px',
-                fontFamily: 'Verdana, sans-serif'
-              }
-            }
-          }]
-        });
-
-        return chart;
-      }
-
-      function ajouterGraphAraignee(cont, utilisateur) {
-        var chart = Highcharts.chart(cont, {
-
-          chart: {
-            polar: true,
-            type: 'line'
-          },
-
-          title: {
-            text: "Qualité d'investissement",
-            x: -80
-          },
-
-          pane: {
-            size: '80%'
-          },
-
-          xAxis: {
-            categories: ["Temps d'écriture", 'Temps de lecture', 'Temps de connexion', "Temps avant lecture d'un nouveau post",
-            "Temps avant réponse d'un nouveau post"],
-            tickmarkPlacement: 'on',
-            lineWidth: 0
-          },
-
-          yAxis: {
-            gridLineInterpolation: 'polygon',
-            lineWidth: 0,
-            min: 0
-          },
-
-          tooltip: {
-            shared: true,
-          },
-
-          legend: {
-            align: 'right',
-            verticalAlign: 'middle',
-            layout: 'vertical'
-          },
-
-          series: [{
-            name: utilisateur,
-            pointPlacement: 'on'
-          }, {
-            name: 'Moyenne',
-            pointPlacement: 'on'
-          }],
-
-          responsive: {
-            rules: [{
-              condition: {
-                maxWidth: 500
-              },
-              chartOptions: {
-                legend: {
-                  align: 'center',
-                  verticalAlign: 'bottom',
-                  layout: 'horizontal'
-                },
-                pane: {
-                  size: '70%'
-                }
-              }
-            }]
-          }
-
-        });
-        return chart;
-
-      }
-
-      function graphBarresMoyenne(cont, data) {
-        Highcharts.chart(cont, {
-          title: {
-            text: "Quantité d'investissement"
-          },
-          xAxis: {
-            categories: ['Répondre à un message', 'Connexion', 'Poster un nouveau message', "Afficher le contenu d'un message"]
-          },
-          labels: {
-            items: [{
-              style: {
-                left: '50px',
-                top: '18px',
-                color: ( // theme
-                Highcharts.defaultOptions.title.style &&
-                Highcharts.defaultOptions.title.style.color
-                ) || 'black'
-              }
-            }]
-          },
-          series: data
-        });
-
-      }
-
-
+    function ajouterCadre(event){
+      $('.gridly').append("<div class='brick'><div class='row'><div class='col-11'></div><div class='col-1'><button  class='delete delButton'><i class='fas fa-times'></i></button></div></div></div>");
+      $('.gridly').gridly();
       $( ".delete" ).click(function( event ) {
-
         $(this).closest('.brick').remove();
       });
+    }
 
-      $('.gridly').gridly({
-        base: 100, // px
-        gutter: 20, // px
-        columns: 12
+    function ajouterGraphCamembert(cont, tab, titre){
+      var chart = Highcharts.chart(cont, {
+        chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: 'pie'
+        },
+        title: {
+          text: titre
+        },
+        tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+          point: {
+            valueSuffix: '%'
+          }
+        },
+        plotOptions: {
+          pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+              enabled: true,
+              format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+          }
+        },
+        series: [{
+          name: 'Brands',
+          colorByPoint: true,
+          data: tab
+        }]
+
+      });
+      return chart;
+    }
+
+    function ajouterGraph(container, date, titre, axisY){
+
+      var chart = Highcharts.chart(container, {
+
+        title: {
+          text: titre
+        },
+
+        yAxis: {
+          title: {
+            text: axisY
+          }
+        },
+
+
+        legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle'
+        },
+        xAxis: {
+          type: 'datetime'
+        },
+
+        plotOptions: {
+          series: {
+            label: {
+              connectorAllowed: false
+            },
+            pointStart: date,
+            pointInterval: 24 * 3600 * 1000
+          }
+        },
+
+        responsive: {
+          rules: [{
+            condition: {
+              maxWidth: 500
+            },
+            chartOptions: {
+              legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+              }
+            }
+          }]
+        }
+
+      });
+      return chart;
+    }
+
+    function ajouterGraphBar(container, tab, titre, axisY){
+      var chart = Highcharts.chart(container, {
+        chart: {
+          type: 'column'
+        },
+        title: {
+          text: titre
+        },
+        xAxis: {
+          type: 'category',
+          labels: {
+            style: {
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif'
+            }
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: axisY
+          }
+        },
+        series: [{
+          name: "Utilisateurs",
+          data: tab,
+          dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#FFFFFF',
+            align: 'right',
+            y: 20, // 10 pixels down from the top
+            style: {
+              fontSize: '18px',
+              fontFamily: 'Verdana, sans-serif'
+            }
+          }
+        }]
       });
 
+      return chart;
+    }
 
-      $(function() {
+    function ajouterGraphAraignee(cont, utilisateur) {
+      var chart = Highcharts.chart(cont, {
 
-        $("#validerMapping").click( function(){
-          $("#idMessage").val();
-          $("#etatValiderMapping").addClass("btn-warning");
-          $("#etatValiderMapping").text("Mapping des données en cours...");
-          $.ajax({
-            type: "POST",
-            url: "/mappingDonnees",
-            data: {fichier: $("#mappingFichier").find('option:selected').text(), utilisateur: $("#utilisateurCol").find('option:selected').text(), heure: $("#heureCol").find('option:selected').text(),
-            date: $("#dateCol").find('option:selected').text(), titre: $("#actionCol").find('option:selected').text(), attribut: $("#attributCol").find('option:selected').text(), delai: $("#delaiCol").find('option:selected').text(),
-            repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), connexion: $("#connexion").val(), lecture: $("#lecture").val(),
-            forum: $("#idForum").val(), message: $("#idMessage").val(), parent: $("#idParent").val()},
-            success: function (data) {
-              $("#etatValiderMapping").removeClass("btn-warning");
-              window.setTimeout(function(){
-                  location.reload();
-              } ,2000);
+        chart: {
+          polar: true,
+          type: 'line'
+        },
+
+        title: {
+          text: "Qualité d'investissement",
+        },
+
+        pane: {
+          size: '80%'
+        },
+
+        xAxis: {
+          categories: ["Temps d'écriture (minutes)", 'Temps de lecture (secondes)', 'Temps de connexion (heures)', "Temps avant lecture d'un nouveau post (heures)",
+          "Temps avant réponse d'un nouveau post (heures)"],
+          tickmarkPlacement: 'on',
+          lineWidth: 0
+        },
+
+        yAxis: {
+          gridLineInterpolation: 'polygon',
+          lineWidth: 0,
+          title: {
+            text: "Nombre d'action"
+          },
+        },
+
+        tooltip: {
+          shared: true,
+        },
+
+        legend: {
+          align: 'right',
+          verticalAlign: 'middle',
+          layout: 'vertical'
+        },
+
+        series: [{
+          name: utilisateur,
+          pointPlacement: 'on'
+        }, {
+          name: 'Moyenne',
+          pointPlacement: 'on'
+        }],
+
+        responsive: {
+          rules: [{
+            condition: {
+              maxWidth: 500
+            },
+            chartOptions: {
+              legend: {
+                align: 'center',
+                verticalAlign: 'bottom',
+                layout: 'horizontal'
+              },
+              pane: {
+                size: '70%'
+              }
+            }
+          }]
+        }
+
+      });
+      return chart;
+
+    }
+
+    function graphBarresMoyenne(cont, data) {
+      Highcharts.chart(cont, {
+        title: {
+          text: "Quantité d'investissement"
+        },
+        xAxis: {
+          categories: ['Répondre à un message', 'Connexion', 'Poster un nouveau message', "Afficher le contenu d'un message"]
+        },
+        yAxis: {
+          title: {
+            text: "Nombre d'action"
+          }
+        },
+        labels: {
+          items: [{
+            style: {
+              left: '50px',
+              top: '18px',
+              color: ( // theme
+              Highcharts.defaultOptions.title.style &&
+              Highcharts.defaultOptions.title.style.color
+              ) || 'black'
+            }
+          }]
+        },
+        series: data
+      });
+
+    }
+
+
+    $( ".delete" ).click(function( event ) {
+
+      $(this).closest('.brick').remove();
+    });
+
+    $('.gridly').gridly({
+      base: 100, // px
+      gutter: 20, // px
+      columns: 12
+    });
+
+
+    $(function() {
+
+      $("#validerMapping").click( function(){
+        $("#idMessage").val();
+        $("#etatValiderMapping").addClass("btn-warning");
+        $("#etatValiderMapping").text("Mapping des données en cours...");
+        $.ajax({
+          type: "POST",
+          url: "/mappingDonnees",
+          data: {fichier: $("#mappingFichier").find('option:selected').text(), utilisateur: $("#utilisateurCol").find('option:selected').text(), heure: $("#heureCol").find('option:selected').text(),
+          date: $("#dateCol").find('option:selected').text(), titre: $("#actionCol").find('option:selected').text(), attribut: $("#attributCol").find('option:selected').text(), delai: $("#delaiCol").find('option:selected').text(),
+          repondre: $("#repondreMessage").val(), poster: $("#creerMessage").val(), connexion: $("#connexion").val(), lecture: $("#lecture").val(),
+          forum: $("#idForum").val(), message: $("#idMessage").val(), parent: $("#idParent").val()},
+          success: function (data) {
+            $("#etatValiderMapping").removeClass("btn-warning");
+            window.setTimeout(function(){
+              location.reload();
+            } ,2000);
             $("#etatValiderMapping").addClass("btn-success");
             $("#etatValiderMapping").text("Le mapping a bien été effectué");
-            },
-          }
-          );
-        }
-        );
-      });
-
-      $(function() {
-
-        $("#validerSeparateur").click( function(){
-          $("#etatValiderSeparateur").addClass("btn-warning");
-          $("#etatValiderSeparateur").text("Séparation des données en cours...");
-          $("#separateurText").val();
-          $.ajax({
-            type: "POST",
-            url: "/separateur",
-            data: {fichier: $("#separateurFichier").find('option:selected').text(), colonne: $("#separateurCol").find('option:selected').text(), separateur: $("#separateurText").val(),
-          },
-          success: function (data){
-            $("#etatValiderSeparateur").removeClass("btn-warning");
-            window.setTimeout(function(){
-                location.reload();
-            } ,2000);
-          $("#etatValiderSeparateur").addClass("btn-success");
-          $("#etatValiderSeparateur").text("La séparation a bien été effectuée");
           },
         }
         );
@@ -896,111 +877,142 @@
       );
     });
 
-    function afficherTableau() {
-      var username = $("#user").val();
+    $(function() {
 
-      $.ajax({
-        url: "../media/"+username+"/" + $("#selectFile").val(),
-        dataType: "text",
-        success: function(data) {
-          data = $.csv.toArrays(data);
-          generateHtmlTable(data);
-        }
-      });
+      $("#validerSeparateur").click( function(){
+        $("#etatValiderSeparateur").addClass("btn-warning");
+        $("#etatValiderSeparateur").text("Séparation des données en cours...");
+        $("#separateurText").val();
+        $.ajax({
+          type: "POST",
+          url: "/separateur",
+          data: {fichier: $("#separateurFichier").find('option:selected').text(), colonne: $("#separateurCol").find('option:selected').text(), separateur: $("#separateurText").val(),
+        },
+        success: function (data){
+          $("#etatValiderSeparateur").removeClass("btn-warning");
+          window.setTimeout(function(){
+            location.reload();
+          } ,2000);
+          $("#etatValiderSeparateur").addClass("btn-success");
+          $("#etatValiderSeparateur").text("La séparation a bien été effectuée");
+        },
+      }
+      );
     }
+    );
+  });
 
-    function getColonnesmapping(param) {
-      //utilisateur, date, heure, titre, attribut
-      var username = $("#user").val();
-      $.ajax({
-        url: "../media/"+username+"/" + param,
-        dataType: "text",
-        success: function(data) {
-          selectNom = ["utilisateur", "date", "heure", "action", "attribut", "delai"];
-          var titre = data.trim().split('\n')[0].split(',');
-          for (var i = 0; i < selectNom.length; i++) {
-            $('#' + selectNom[i] + 'Col').html("");
-            $('#' + selectNom[i] + 'Col').append($('<option selected>', {
-              value: "",
-              text: ""
+  function afficherTableau() {
+    var username = $("#user").val();
+
+    $.ajax({
+      url: "../media/"+username+"/" + $("#selectFile").val(),
+      dataType: "text",
+      success: function(data) {
+        data = $.csv.toArrays(data);
+        generateHtmlTable(data);
+      }
+    });
+  }
+
+  function getColonnesmapping(param) {
+    //utilisateur, date, heure, titre, attribut
+    var username = $("#user").val();
+    $.ajax({
+      url: "../media/"+username+"/" + param,
+      dataType: "text",
+      success: function(data) {
+        selectNom = ["utilisateur", "date", "heure", "action", "attribut", "delai"];
+        var titre = data.trim().split('\n')[0].split(',');
+        for (var i = 0; i < selectNom.length; i++) {
+          $('#' + selectNom[i] + 'Col').html("");
+          $('#' + selectNom[i] + 'Col').append($('<option selected>', {
+            value: "",
+            text: ""
+          }));
+          for (var j = 0; j < titre.length; j++) {
+            $('#' + selectNom[i] + 'Col').append($('<option>', {
+              value: j,
+              text: titre[j]
             }));
-            for (var j = 0; j < titre.length; j++) {
-              $('#' + selectNom[i] + 'Col').append($('<option>', {
-                value: j,
-                text: titre[j]
-              }));
-            }
           }
         }
-      });
-    }
+      }
+    });
+  }
 
-    function getColonnesseparateur(param) {
-      //utilisateur, date, heure, titre, attribut
-      var username = $("#user").val();
-      $.ajax({
-        url: "../media/"+username+"/" + param,
-        dataType: "text",
-        success: function(data) {
-          selectNom = ["separateur"];
-          var titre = data.trim().split('\n')[0].split(',');
-          for (var i = 0; i < selectNom.length; i++) {
-            $('#' + selectNom[i] + 'Col').html("");
-            $('#' + selectNom[i] + 'Col').append($('<option selected>', {
-              value: "",
-              text: ""
+  function getColonnesseparateur(param) {
+    //utilisateur, date, heure, titre, attribut
+    var username = $("#user").val();
+    $.ajax({
+      url: "../media/"+username+"/" + param,
+      dataType: "text",
+      success: function(data) {
+        selectNom = ["separateur"];
+        var titre = data.trim().split('\n')[0].split(',');
+        for (var i = 0; i < selectNom.length; i++) {
+          $('#' + selectNom[i] + 'Col').html("");
+          $('#' + selectNom[i] + 'Col').append($('<option selected>', {
+            value: "",
+            text: ""
+          }));
+          for (var j = 0; j < titre.length; j++) {
+            $('#' + selectNom[i] + 'Col').append($('<option>', {
+              value: j,
+              text: titre[j]
             }));
-            for (var j = 0; j < titre.length; j++) {
-              $('#' + selectNom[i] + 'Col').append($('<option>', {
-                value: j,
-                text: titre[j]
-              }));
-            }
           }
         }
-      });
+      }
+    });
 
-    }
+  }
 
-    function generateHtmlTable(data) {
+  function generateHtmlTable(data) {
 
-      var html = '<table id="table" class="table table-condensed table-hover table-striped">';
+    var html = '<table id="table" class="table table-condensed table-hover table-striped">';
 
-        if (typeof(data[0]) === 'undefined') {
-          return null;
-        } else {
-          $.each(data, function(index, row) {
-            //bind header
-            if (index == 0) {
-              html += '<thead>';
-                html += '<tr>';
-                  $.each(row, function(index, colData) {
-                    html += '<th>';
-                      html += colData;
-                      html += '</th>';
+      if (typeof(data[0]) === 'undefined') {
+        return null;
+      } else {
+        $.each(data, function(index, row) {
+          //bind header
+          if (index == 0) {
+            html += '<thead>';
+              html += '<tr>';
+                $.each(row, function(index, colData) {
+                  html += '<th>';
+                    html += colData;
+                    html += '</th>';
+                  });
+                  html += '</tr>';
+                  html += '</thead>';
+                  html += '<tbody>';
+                  } else {
+                    html += '<tr>';
+                      $.each(row, function(index, colData) {
+                        html += '<td>';
+                          html += colData;
+                          html += '</td>';
+                        });
+                        html += '</tr>';
+                      }
                     });
-                    html += '</tr>';
-                    html += '</thead>';
-                    html += '<tbody>';
-                    } else {
-                      html += '<tr>';
-                        $.each(row, function(index, colData) {
-                          html += '<td>';
-                            html += colData;
-                            html += '</td>';
-                          });
-                          html += '</tr>';
-                        }
-                      });
-                      html += '</tbody>';
-                      html += '</table>';
-                      $('#csv-display').html(html);
-                    }
+                    html += '</tbody>';
+                    html += '</table>';
+                    $('#csv-display').html(html);
                     $('#table').DataTable();
+                  }}
 
-                  }
-                </script></div>
+                </script>
+{% else %}
+<div class="bg-text">
+  <h1>COLLAVIZ</h1>
+  <h3>Bienvenue sur le site Collaviz !</h3>
+  <h3>Le site qui permet d'analyser la collaboration à partir de traces.</h3>
+  <h3>Veuillez vous connecter ou vous inscrire pour continuer.</h3>
 
-
-
-                {% endblock %}
+</div>
+{% endif %}
+</div>
+  {% endblock %}
