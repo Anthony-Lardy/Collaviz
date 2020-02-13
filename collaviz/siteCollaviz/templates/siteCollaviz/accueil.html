@@ -1,32 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
 <input type="hidden" id="user" value="{{user.username}}">
 <div class="text-center">
+  {% if user.is_authenticated %}
   <div class="container" >
-    {% if user.is_authenticated %}
-    <div class="row justify-content-md-center text-center">
-      <div>
-        <h1>Collaviz</h1>
+    <div  class="container justify-content-md-center text-center">
+      <div class="bg-text">
         <h3>Déposez le fichier à étudier : </h3>
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          <input type="file" name="fichier">
-          <button type="submit">Déposer</button>
+          <div class="container">
+            <div class="row">
+              <div class="col"></div>
+              <div class="col-3"> <input type="file"  name="fichier"></div>
+              <div class="col"></div>
+            </div>
+          </div>
+          <button class="btn btn-success" id="btnDepotFile" type="submit">Déposer</button>
         </form>
-        <div id="cont"></div>
       </div>
     </div>
-    <br><br><br><br><br>
-    <br><br><br><br><br>
-    <br><br><br><br><br>
-    <br><br><br><br><br>
-    <br><br><br><br><br>
-    <br><br><br><br>
-    <!--previsualisation------------>
   </div>
-  <div class="container">
+    <!--previsualisation------------>
+  <div id="previsualisationT" class="container">
     <div class="row justify-content-md-center">
       <h2 id="titreVisu">Prévisualisation des données</h2>
     </div>
@@ -48,13 +45,16 @@
   </div>
   <div class="container">
     <div class="row">
-      <div class="col-8">
+      <div class="col-4">
+        <h4>Choisissez le fichier </h4>
       </div>
       <div class="col-4">
-        <label>"Séparateur :"</label>
+        <h4>Choisissez la colonne </h4>
       </div>
       <div class="col-4">
-        <label></label>
+        <h4>Séparateur </h4>
+      </div>
+      <div class="col-4"><br>
         <select class="browser-default custom-select" id="separateurFichier">
           <option selected disabled value=""></option>
           {% for o in file %}
@@ -62,19 +62,20 @@
           {% endfor %}
         </select>
       </div>
-      <div id="separateur" class="col-4">
-        <label></label>
+      <div id="separateur" class="col-4"><br>
         <select id="separateurCol" class="browser-default custom-select"> </select>
       </div>
       <div id="heure" class="col-4">
         <input id="separateurText" class="w3-input" type="text">
       </div>
-    </div><br><br>
+    </div>
+    <br>
     <div class="row justify-content-md-center">
       <button type="button" id="validerSeparateur" class="btn btn-success">Valider le séparateur</button>
     </div>
   </div>
   <br>
+
   <div id="etatValiderSeparateur" class="alert"></div>
   <!--Mapping------------>
   <div class="container">
@@ -95,58 +96,58 @@
         {%endif %}
       </div>
       <div id="user" class="col-4">
-        <h4>Utilisateur : </h4>
+        <h4>Utilisateur <i  data-trigger="hover"  data-content="Selectionnez la colonne contenant tous les utilisateurs." rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="utilisateurCol" class="browser-default custom-select"> </select>
       </div>
       <div id="date" class="col-4">
-        <h4>Date : </h4>
+        <h4>Date <i  data-trigger="hover"  data-content="Selectionnez la colonne contenant la date à laquelle l'action a été effectuée." rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="dateCol" class="browser-default custom-select"> </select>
       </div>
       <div id="heure" class="col-4">
-        <h4>Heure : </h4>
+        <h4>Heure <i  data-trigger="hover"  data-content="Selectionnez la colonne contenant l'heure à laquelle l'action a été effectuée." rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="heureCol" class="browser-default custom-select"> </select>
       </div><br><br><br><br><br>
       <div id="action" class="col-4">
-        <h4>Action : </h4>
+        <h4>Action <i  data-trigger="hover"  data-content="Selectionnez la colonne contenant toutes les actions (exemples: Répondre à un message, Connexion, etc)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="actionCol" class="browser-default custom-select"></select>
       </div>
       <div id="delai" class="col-4">
-        <h4>Delai : </h4>
+        <h4>Delai <i  data-trigger="hover"  data-content="Selectionnez la colonne contenant le temps passé à effectuer une action (exemples: temps d'écriture d'un message, etc)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="delaiCol" class="browser-default custom-select"></select>
       </div><br><br><br><br>
       <div class="row col-12">
         <div class="col-4">
-          <label>"Répondre à un message : "</label>
+          <h4>Répondre à un message <i  data-trigger="hover"  data-content="Entrez la chaine de caractère correspondant à l'action 'Répondre à un message'" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="repondreMessage" class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"Poster un nouveau message :"</label>
+          <h4>Poster un nouveau message <i  data-trigger="hover"  data-content="Entrez la chaine de caractère correspondant à l'action 'Poster un nouveau message'" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="creerMessage" class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"Connexion :"</label>
+          <h4>Connexion <i  data-trigger="hover"  data-content="Entrez la chaine de caractère correspondant à l'action 'Connexion'" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="connexion" class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"Afficher le contenu d'un message :"</label>
+          <h4>Afficher le contenu d'un message <i  data-trigger="hover"  data-content="Entrez la chaine de caractère correspondant à l'action 'Afficher le contenu d'un message'" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="lecture" class="w3-input" type="text">
         </div>
       </div>
       <div id="attribut" class="col-4">
-        <h4>Attribut : </h4>
+        <h4>Attribut : <i  data-trigger="hover"  data-content="Selectionner la colonne contenant les informations complémentaires pour les messages (exemples: id du forum, id du message, etc)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
         <select id="attributCol" class="browser-default custom-select"></select>
       </div><br><br><br><br>
       <div class="row col-12">
         <div class="col-4">
-          <label>"idForum : "</label>
+          <h4>idForum <i  data-trigger="hover"  data-content="Entrez la chaine de caractère précedent l'id du forum (exemple: si votre colonne contient IDForum=2 entrez alors IDForum=)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="idForum" class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"idMessage :"</label>
+          <h4>idMessage <i  data-trigger="hover"  data-content="Entrez la chaine de caractère précedent l'id du message (exemple: si votre colonne contient IDMsg=2 entrez alors IDMsg=)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="idMessage"  class="w3-input" type="text">
         </div>
         <div class="col-4">
-          <label>"idParent :"</label>
+          <h4>idParent <i  data-trigger="hover"  data-content="Entrez la chaine de caractère précedent l'id du message auquel il répond (exemple: si votre colonne contient IDParent=2 entrez alors IDParent=)" rel="popover" class="fas fa-info-circle bulle"></i></h4>
           <input id="idParent" class="w3-input" type="text">
         </div>
         <div class="col-12">
@@ -228,7 +229,7 @@
     </div>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
   </div>
-  {% endif %}
+
 
   <script type="text/javascript">
 
@@ -236,9 +237,11 @@
     j=0;
     var user;
     var table = [];
+    $('.bulle').popover();
     $( document ).ready(function() {
       $("#indicateursComplexesDiv").hide();
       fichierMapping();
+
 
     });
 
@@ -995,12 +998,18 @@
                     html += '</tbody>';
                     html += '</table>';
                     $('#csv-display').html(html);
-                  }
-                  $('#table').DataTable();
+                    $('#table').DataTable();
+                  }}
 
-                }
-              </script></div>
+                </script>
+{% else %}
+<div class="bg-text">
+  <h1>COLLAVIZ</h1>
+  <h3>Bienvenue sur le site Collaviz !</h3>
+  <h3>Le site qui permet d'analyser la collaboration à partir de traces.</h3>
+  <h3>Veuillez vous connecter ou vous inscrire pour continuer.</h3>
 
-
-
-              {% endblock %}
+</div>
+{% endif %}
+</div>
+  {% endblock %}
