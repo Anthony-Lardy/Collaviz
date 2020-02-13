@@ -31,9 +31,14 @@ import time
 def collaviz(request):
     folder= 'media/' + request.user.username + "/"
     donnees = {
-        'file' : file.findallfile(folder),
-        'mapping': file.findallfile(folder + "mapping/")
+
     }
+    print(request.user.username)
+    if(request.user.username is not ''):
+        donnees = {
+            'file' : file.findallfile(folder),
+            'mapping': file.findallfile(folder + "mapping/")
+        }
     if request.method == 'POST' and 'fichier' in request.FILES:
         myfile = request.FILES['fichier']
         fs = FileSystemStorage(location=folder)
