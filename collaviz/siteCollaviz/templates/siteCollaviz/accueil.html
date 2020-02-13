@@ -488,7 +488,7 @@
           mois = parseInt(dateDeb.substr(5, 2))-1;
           jour = parseInt(dateDeb.substr(8, 2));
 
-          chart = ajouterGraph(cont, dateDeb, "Nombre de fois que le(s) utilisateur(s) selectionné(s) ont fait l'action : " + actions , "Nombre d'action effectué par jour");
+          chart = ajouterGraph(cont, dateDeb, "Nombre de fois que les utilisateurs selectionnés ont fait l'action : " + actions , "Nombre d'action effectué par jour");
           for (var i = 0; i<data.length; i++){
             var options = {
               name: utilisateurs[i],
@@ -560,7 +560,7 @@
           for (var j = 0; j<data.length; j++){
             tab.push([utilisateurs[j], data[j]]);
           }
-          ajouterGraphBar(cont, tab, "Nombre de fois que " + utilisateurs + " ont fait l'action : " + action, "Nombre d'action");
+          ajouterGraphBar(cont, tab, "Nombre de fois que les utilisateurs selectionnés ont fait l'action : " + action, "Nombre d'action");
         },
       });
     }
@@ -758,9 +758,6 @@
         yAxis: {
           gridLineInterpolation: 'polygon',
           lineWidth: 0,
-          title: {
-            text: "Nombre d'action"
-          },
         },
 
         tooltip: {
