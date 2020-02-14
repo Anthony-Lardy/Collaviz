@@ -29,7 +29,7 @@ def actionDate(dataFrame, Action, Utilisateur, Date):
 def gestionDate(dataFrame, Date1, Date2):
 
     d=dataFrame['Date'].unique().tolist()
-    if Date1 is None and Date2 is not None:
+    if Date1 is "" and Date2 is not "":
 
         Date1=d[0].split("-")
         Date2=Date2.split("-")
@@ -37,7 +37,7 @@ def gestionDate(dataFrame, Date1, Date2):
         end = datetime.date(int(Date2[0]), int(Date2[1]), int(Date2[2]))
         date_generated = [str(start + datetime.timedelta(x)) for x in range(int((end-start).days)+1)]
 
-    elif Date2 is None and Date1 is not None:
+    elif Date2 is "" and Date1 is not "":
 
         Date1=Date1.split("-")
         Date2=d[len(d)-1].split("-")
@@ -46,7 +46,7 @@ def gestionDate(dataFrame, Date1, Date2):
         date_generated = [str(start + datetime.timedelta(x)) for x in range(int((end-start).days)+1)]
 
 
-    elif (Date2 is None) and (Date1 is None):
+    elif (Date2 is "") and (Date1 is ""):
 
         Date1=d[0].split("-")
         Date2=d[len(d)-1].split("-")

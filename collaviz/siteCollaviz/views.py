@@ -12,6 +12,7 @@ from siteCollaviz import actionsUser
 from siteCollaviz import actionUsers
 from siteCollaviz import nbReponsesDesAutres
 from siteCollaviz import calculIndicateurs
+from siteCollaviz import gestionDate
 from siteCollaviz import cellDupli
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -98,7 +99,13 @@ def validerParams(request):
         if request.is_ajax() and request.method == 'POST':
             array_data = request.POST['utilisateurs']
             utilisateurs = json.loads(array_data)
-            data = actionParTemps.actionParTemps(request.user.username, request.POST['file'], utilisateurs, request.POST.get('actions'), request.POST['dateDeb'], request.POST['dateFin'])
+            data = []
+            data.append(actionParTemps.actionParTemps(request.user.username, request.POST['file'], utilisateurs, request.POST.get('actions'), request.POST['dateDeb'], request.POST['dateFin']))
+            if(request.POST['dateDeb'] == ""):
+                data.append(gestionDate.getFirstDate(request.user.username, request.POST['file']))
+            else:
+                data.append(request.POST['dateDeb'])
+            print(data)
             return JsonResponse(data, safe=False)
         return render(request, 'siteCollaviz/accueil.html')
 

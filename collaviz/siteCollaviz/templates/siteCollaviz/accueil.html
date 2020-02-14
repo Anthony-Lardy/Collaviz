@@ -485,15 +485,15 @@
           file: fichier,
         },
         success: function (data) {
-          annee = parseInt(dateDeb.substr(0, 4));
-          mois = parseInt(dateDeb.substr(5, 2))-1;
-          jour = parseInt(dateDeb.substr(8, 2));
+          annee = parseInt(data[1].substr(0, 4));
+          mois = parseInt(data[1].substr(5, 2))-1;
+          jour = parseInt(data[1].substr(8, 2));
+          chart = ajouterGraph(cont,data[1], "Nombre de fois que les utilisateurs selectionnés ont fait l'action : " + actions , "Nombre d'action effectué par jour");
 
-          chart = ajouterGraph(cont, dateDeb, "Nombre de fois que les utilisateurs selectionnés ont fait l'action : " + actions , "Nombre d'action effectué par jour");
-          for (var i = 0; i<data.length; i++){
+        for (var i = 0; i<data[0].length; i++){
             var options = {
               name: utilisateurs[i],
-              data: data[i],
+              data: data[0][i],
               pointStart: Date.UTC(annee, mois, jour),
               pointInterval: 24 * 3600 * 1000,
             }
