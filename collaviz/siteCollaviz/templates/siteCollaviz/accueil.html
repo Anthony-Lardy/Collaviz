@@ -262,11 +262,11 @@
         },
         success: function (data) {
           $("#indicateursComplexesDiv").show();
-          annee = parseInt(dateDebut.substr(0, 4));
-          mois = parseInt(dateDebut.substr(5, 2))-1;
-          jour = parseInt(dateDebut.substr(8, 2));
+          annee = parseInt(data[7].substr(0, 4));
+          mois = parseInt(data[7].substr(5, 2))-1;
+          jour = parseInt(data[7].substr(8, 2));
           //premier graph
-          chart1 = ajouterGraph(cont, dateDebut, "La régularité de " + utilisateur + " comparée à la moyenne des utilisateurs actifs" , "Nombre d'action effectué par jour");
+          chart1 = ajouterGraph(cont, data[7], "La régularité de " + utilisateur + " comparée à la moyenne des utilisateurs actifs" , "Nombre d'action effectué par jour");
           for (var i = 0; i<data[0].length; i++){
             var options = {
               name: actions[i],

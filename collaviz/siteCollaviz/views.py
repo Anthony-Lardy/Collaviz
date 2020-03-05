@@ -149,6 +149,10 @@ def validerParamsComplexes(request):
             tab.append(calculIndicateurs.calculsIndicateurs(fichier, request.POST['utilisateur'], request.POST['groupeUsers'], request.POST['dateDebut'], request.POST['dateFin']))
             print("calculsNbActions")
             tab.append(calculIndicateurs.calculsNbActions(fichier, json.loads(request.POST['groupeUsers'])))
+            if(request.POST['dateDebut'] == ""):
+                tab.append(gestionDate.getFirstDate(request.user.username, request.POST['fichier']))
+            else:
+                tab.append(request.POST['dateDebut'])
             return JsonResponse(tab, safe=False)
         return render(request, 'siteCollaviz/accueil.html')
 
